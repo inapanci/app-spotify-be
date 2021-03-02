@@ -73,9 +73,9 @@ public class User implements Serializable {
 	@OneToMany(mappedBy = "user")
 	private List<Ticket> tickets;
 
-	// bi-directional many-to-one association to Transaction
-	@OneToMany(mappedBy = "user")
-	private List<Transaction> transactions;
+//	// bi-directional many-to-one association to Transaction
+//	@OneToMany(mappedBy = "user")
+//	private List<Transaction> transactions;
 
 	// bi-directional many-to-one association to UserPromotion
 	@OneToMany(mappedBy = "user")
@@ -98,7 +98,7 @@ public class User implements Serializable {
 	public User(String id, String username, BigDecimal balance, String email, Date lastSignIn, String notifications,
 			String password, String role, Date signUpDate, List<Account> accounts, List<Announcement> announcements,
 			List<CustomProductPrice> customProductPrices, List<Message> messages, List<Order> orders,
-			List<Staff> staffs, List<Ticket> tickets, List<Transaction> transactions,
+			List<Staff> staffs, List<Ticket> tickets, //List<Transaction> transactions,
 			List<UserPromotion> userPromotions, UserStatus userStatus, List<PaymentMethod> paymentMethods) {
 		super();
 		this.id = id;
@@ -117,7 +117,7 @@ public class User implements Serializable {
 		this.orders = orders;
 		this.staffs = staffs;
 		this.tickets = tickets;
-		this.transactions = transactions;
+		//this.transactions = transactions;
 		this.userPromotions = userPromotions;
 		this.userStatus = userStatus;
 		this.paymentMethods = paymentMethods;
@@ -251,13 +251,13 @@ public class User implements Serializable {
 		this.tickets = tickets;
 	}
 
-	public List<Transaction> getTransactions() {
-		return transactions;
-	}
-
-	public void setTransactions(List<Transaction> transactions) {
-		this.transactions = transactions;
-	}
+//	public List<Transaction> getTransactions() {
+//		return transactions;
+//	}
+//
+//	public void setTransactions(List<Transaction> transactions) {
+//		this.transactions = transactions;
+//	}
 
 	public List<UserPromotion> getUserPromotions() {
 		return userPromotions;
@@ -293,9 +293,9 @@ public class User implements Serializable {
 				+ ", lastSignIn=" + lastSignIn + ", notifications=" + notifications + ", password=" + password
 				+ ", role=" + role + ", signUpDate=" + signUpDate + ", accounts=" + accounts + ", announcements="
 				+ announcements + ", customProductPrices=" + customProductPrices + ", messages=" + messages
-				+ ", orders=" + orders + ", staffs=" + staffs + ", tickets=" + tickets + ", transactions="
-				+ transactions + ", userPromotions=" + userPromotions + ", userStatus=" + userStatus
-				+ ", paymentMethods=" + paymentMethods + "]";
+				+ ", orders=" + orders + ", staffs=" + staffs + ", tickets=" + tickets + ", userPromotions="
+				+ userPromotions + ", userStatus=" + userStatus + ", paymentMethods=" + paymentMethods + "]";
 	}
+
 
 }

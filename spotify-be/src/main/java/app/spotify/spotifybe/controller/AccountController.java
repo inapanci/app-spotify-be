@@ -5,7 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import app.spotify.spotifybe.model.Account;
@@ -25,9 +28,26 @@ public class AccountController {
 		return nrSold;
 	}
 	
-	@GetMapping("/hello")
-	public String sayHi() {
-		return "workssss";
+	@GetMapping("/account/findById")
+	public Account getById(@RequestParam("accountId") long id) {
+		return accountRepo.findById(id).get();
+	}
+	
+	@PostMapping("/account/addNew")
+	public Account addNewAccount(@RequestBody Account a){
+		Account account = new Account();
+		account.setAddress(a.getAddress());
+		account.setCountry(a.getCountry());
+		account.setCredentials(a.getCredentials());
+		account.setExpire(a.getExpire());
+		account.setExtra(a.getExtra());
+		account.setInvites(a.getInvites());
+		account.setInviteToken(a.getInviteToken());
+		account.setSold(a.getSold());
+		account.setSubscriptionType(a.getSubscriptionType());
+		account.setProduct(a.getProduct());
+		accountRepo.save(account);
+		return account;
 	}
 
 }
