@@ -61,9 +61,9 @@ public class User implements Serializable {
 	@OneToMany(mappedBy = "user")
 	private List<Message> messages;
 
-	// bi-directional many-to-one association to Order
-	@OneToMany(mappedBy = "user")
-	private List<Order> orders;
+//	// bi-directional many-to-one association to Order
+//	@OneToMany(mappedBy = "user")
+//	private List<Order> orders;
 
 	// bi-directional many-to-one association to Staff
 	@OneToMany(mappedBy = "user")
@@ -97,7 +97,7 @@ public class User implements Serializable {
 
 	public User(String id, String username, BigDecimal balance, String email, Date lastSignIn, String notifications,
 			String password, String role, Date signUpDate, List<Account> accounts, List<Announcement> announcements,
-			List<CustomProductPrice> customProductPrices, List<Message> messages, List<Order> orders,
+			List<CustomProductPrice> customProductPrices, List<Message> messages, //List<Order> orders,
 			List<Staff> staffs, List<Ticket> tickets, //List<Transaction> transactions,
 			List<UserPromotion> userPromotions, UserStatus userStatus, List<PaymentMethod> paymentMethods) {
 		super();
@@ -114,7 +114,7 @@ public class User implements Serializable {
 		this.announcements = announcements;
 		this.customProductPrices = customProductPrices;
 		this.messages = messages;
-		this.orders = orders;
+		//this.orders = orders;
 		this.staffs = staffs;
 		this.tickets = tickets;
 		//this.transactions = transactions;
@@ -227,13 +227,13 @@ public class User implements Serializable {
 		this.messages = messages;
 	}
 
-	public List<Order> getOrders() {
-		return orders;
-	}
-
-	public void setOrders(List<Order> orders) {
-		this.orders = orders;
-	}
+//	public List<Order> getOrders() {
+//		return orders;
+//	}
+//
+//	public void setOrders(List<Order> orders) {
+//		this.orders = orders;
+//	}
 
 	public List<Staff> getStaffs() {
 		return staffs;
@@ -293,8 +293,8 @@ public class User implements Serializable {
 				+ ", lastSignIn=" + lastSignIn + ", notifications=" + notifications + ", password=" + password
 				+ ", role=" + role + ", signUpDate=" + signUpDate + ", accounts=" + accounts + ", announcements="
 				+ announcements + ", customProductPrices=" + customProductPrices + ", messages=" + messages
-				+ ", orders=" + orders + ", staffs=" + staffs + ", tickets=" + tickets + ", userPromotions="
-				+ userPromotions + ", userStatus=" + userStatus + ", paymentMethods=" + paymentMethods + "]";
+				+ ", staffs=" + staffs + ", tickets=" + tickets + ", userPromotions=" + userPromotions + ", userStatus="
+				+ userStatus + ", paymentMethods=" + paymentMethods + "]";
 	}
 
 

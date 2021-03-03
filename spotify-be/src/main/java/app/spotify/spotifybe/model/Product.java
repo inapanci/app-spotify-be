@@ -62,9 +62,9 @@ public class Product implements Serializable {
 	@OneToMany(mappedBy="product")
 	private List<CustomProductPrice> customProductPrices;
 
-	//bi-directional many-to-one association to Order
-	@OneToMany(mappedBy="product")
-	private List<Order> orders;
+//	//bi-directional many-to-one association to Order
+//	@OneToMany(mappedBy="product")
+//	private List<Order> orders;
 
 	//bi-directional many-to-one association to ProductStatus
 	@ManyToOne
@@ -76,7 +76,7 @@ public class Product implements Serializable {
 
 	public Product(int id, Date createdAt, Date deliveryTime, String description, String format, int gate, int maximum,
 			int minimum, BigDecimal price, byte[] productImage, int sort, String title, String warranty,
-			List<Account> accounts, List<CustomProductPrice> customProductPrices, List<Order> orders,
+			List<Account> accounts, List<CustomProductPrice> customProductPrices, //List<Order> orders,
 			ProductStatus productStatus) {
 		super();
 		this.id = id;
@@ -94,7 +94,7 @@ public class Product implements Serializable {
 		this.warranty = warranty;
 		this.accounts = accounts;
 		this.customProductPrices = customProductPrices;
-		this.orders = orders;
+		//this.orders = orders;
 		this.productStatus = productStatus;
 	}
 
@@ -245,28 +245,28 @@ public class Product implements Serializable {
 
 		return customProductPrice;
 	}
+//
+//	public List<Order> getOrders() {
+//		return this.orders;
+//	}
+//
+//	public void setOrders(List<Order> orders) {
+//		this.orders = orders;
+//	}
 
-	public List<Order> getOrders() {
-		return this.orders;
-	}
-
-	public void setOrders(List<Order> orders) {
-		this.orders = orders;
-	}
-
-	public Order addOrder(Order order) {
-		getOrders().add(order);
-		order.setProduct(this);
-
-		return order;
-	}
-
-	public Order removeOrder(Order order) {
-		getOrders().remove(order);
-		order.setProduct(null);
-
-		return order;
-	}
+//	public Order addOrder(Order order) {
+//		getOrders().add(order);
+//		order.setProduct(this);
+//
+//		return order;
+//	}
+//
+//	public Order removeOrder(Order order) {
+//		getOrders().remove(order);
+//		order.setProduct(null);
+//
+//		return order;
+//	}
 
 	public ProductStatus getProductStatus() {
 		return this.productStatus;
@@ -282,7 +282,7 @@ public class Product implements Serializable {
 				+ description + ", format=" + format + ", gate=" + gate + ", maximum=" + maximum + ", minimum="
 				+ minimum + ", price=" + price + ", productImage=" + Arrays.toString(productImage) + ", sort=" + sort
 				+ ", title=" + title + ", warranty=" + warranty + ", accounts=" + accounts + ", customProductPrices="
-				+ customProductPrices + ", orders=" + orders + ", productStatus=" + productStatus + "]";
+				+ customProductPrices + ", productStatus=" + productStatus + "]";
 	}
 
 }
