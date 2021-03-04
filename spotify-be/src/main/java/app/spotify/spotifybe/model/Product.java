@@ -54,9 +54,9 @@ public class Product implements Serializable {
 
 	private String warranty;
 
-	//bi-directional many-to-one association to Account
-	@OneToMany(mappedBy="product")
-	private List<Account> accounts;
+//	//bi-directional many-to-one association to Account
+//	@OneToMany(mappedBy="product")
+//	private List<Account> accounts;
 
 	//bi-directional many-to-one association to CustomProductPrice
 	@OneToMany(mappedBy="product")
@@ -76,7 +76,7 @@ public class Product implements Serializable {
 
 	public Product(int id, Date createdAt, Date deliveryTime, String description, String format, int gate, int maximum,
 			int minimum, BigDecimal price, byte[] productImage, int sort, String title, String warranty,
-			List<Account> accounts, List<CustomProductPrice> customProductPrices, //List<Order> orders,
+			 List<CustomProductPrice> customProductPrices, //List<Order> orders, List<Account> accounts,
 			ProductStatus productStatus) {
 		super();
 		this.id = id;
@@ -92,7 +92,7 @@ public class Product implements Serializable {
 		this.sort = sort;
 		this.title = title;
 		this.warranty = warranty;
-		this.accounts = accounts;
+		//this.accounts = accounts;
 		this.customProductPrices = customProductPrices;
 		//this.orders = orders;
 		this.productStatus = productStatus;
@@ -202,27 +202,27 @@ public class Product implements Serializable {
 		this.warranty = warranty;
 	}
 
-	public List<Account> getAccounts() {
-		return this.accounts;
-	}
+//	public List<Account> getAccounts() {
+//		return this.accounts;
+//	}
+//
+//	public void setAccounts(List<Account> accounts) {
+//		this.accounts = accounts;
+//	}
 
-	public void setAccounts(List<Account> accounts) {
-		this.accounts = accounts;
-	}
-
-	public Account addAccount(Account account) {
-		getAccounts().add(account);
-		account.setProduct(this);
-
-		return account;
-	}
-
-	public Account removeAccount(Account account) {
-		getAccounts().remove(account);
-		account.setProduct(null);
-
-		return account;
-	}
+//	public Account addAccount(Account account) {
+//		getAccounts().add(account);
+//		account.setProduct(this);
+//
+//		return account;
+//	}
+//
+//	public Account removeAccount(Account account) {
+//		getAccounts().remove(account);
+//		account.setProduct(null);
+//
+//		return account;
+//	}
 
 	public List<CustomProductPrice> getCustomProductPrices() {
 		return this.customProductPrices;
@@ -281,8 +281,8 @@ public class Product implements Serializable {
 		return "Product [id=" + id + ", createdAt=" + createdAt + ", deliveryTime=" + deliveryTime + ", description="
 				+ description + ", format=" + format + ", gate=" + gate + ", maximum=" + maximum + ", minimum="
 				+ minimum + ", price=" + price + ", productImage=" + Arrays.toString(productImage) + ", sort=" + sort
-				+ ", title=" + title + ", warranty=" + warranty + ", accounts=" + accounts + ", customProductPrices="
-				+ customProductPrices + ", productStatus=" + productStatus + "]";
+				+ ", title=" + title + ", warranty=" + warranty + ", customProductPrices=" + customProductPrices
+				+ ", productStatus=" + productStatus + "]";
 	}
 
 }

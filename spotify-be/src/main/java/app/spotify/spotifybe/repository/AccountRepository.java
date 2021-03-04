@@ -1,5 +1,7 @@
 package app.spotify.spotifybe.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -9,5 +11,8 @@ public interface AccountRepository extends JpaRepository<Account, Long>{
 
 	@Query("SELECT count(a) FROM Account a where a.sold is not null and a.sold != 0")
 	public Integer getNumberSold();
+	
+	@Query("SELECT count(a) FROM Account a where a.product.id = ?1")
+	public Integer findByProductId(int productId);
 
 }
