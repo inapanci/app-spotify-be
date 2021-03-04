@@ -32,9 +32,9 @@ public class Ticket implements Serializable {
 	@Column(name="updated_at")
 	private Date updatedAt;
 
-	//bi-directional many-to-one association to Message
-	@OneToMany(mappedBy="ticket")
-	private List<Message> messages;
+//	//bi-directional many-to-one association to Message
+//	@OneToMany(mappedBy="ticket")
+//	private List<Message> messages;
 
 	//bi-directional many-to-one association to TicketStatus
 	@ManyToOne
@@ -49,7 +49,7 @@ public class Ticket implements Serializable {
 	public Ticket() {
 	}
 
-	public Ticket(int id, Date createdAt, String notes, String title, Date updatedAt, List<Message> messages,
+	public Ticket(int id, Date createdAt, String notes, String title, Date updatedAt, //<Message> messages,
 			TicketStatus ticketStatus, User user) {
 		super();
 		this.id = id;
@@ -57,7 +57,7 @@ public class Ticket implements Serializable {
 		this.notes = notes;
 		this.title = title;
 		this.updatedAt = updatedAt;
-		this.messages = messages;
+		//this.messages = messages;
 		this.ticketStatus = ticketStatus;
 		this.user = user;
 	}
@@ -102,27 +102,27 @@ public class Ticket implements Serializable {
 		this.updatedAt = updatedAt;
 	}
 
-	public List<Message> getMessages() {
-		return this.messages;
-	}
-
-	public void setMessages(List<Message> messages) {
-		this.messages = messages;
-	}
-
-	public Message addMessage(Message message) {
-		getMessages().add(message);
-		message.setTicket(this);
-
-		return message;
-	}
-
-	public Message removeMessage(Message message) {
-		getMessages().remove(message);
-		message.setTicket(null);
-
-		return message;
-	}
+//	public List<Message> getMessages() {
+//		return this.messages;
+//	}
+//
+//	public void setMessages(List<Message> messages) {
+//		this.messages = messages;
+//	}
+//
+//	public Message addMessage(Message message) {
+//		getMessages().add(message);
+//		message.setTicket(this);
+//
+//		return message;
+//	}
+//
+//	public Message removeMessage(Message message) {
+//		getMessages().remove(message);
+//		message.setTicket(null);
+//
+//		return message;
+//	}
 
 	public TicketStatus getTicketStatus() {
 		return this.ticketStatus;
@@ -143,7 +143,7 @@ public class Ticket implements Serializable {
 	@Override
 	public String toString() {
 		return "Ticket [id=" + id + ", createdAt=" + createdAt + ", notes=" + notes + ", title=" + title
-				+ ", updatedAt=" + updatedAt + ", messages=" + messages + ", ticketStatus=" + ticketStatus + ", user="
+				+ ", updatedAt=" + updatedAt + ", ticketStatus=" + ticketStatus + ", user="
 				+ user + "]";
 	}
 

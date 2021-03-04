@@ -22,18 +22,18 @@ public class TicketStatus implements Serializable {
 	@Column(name="description", length=100)
 	private String description;
 
-	//bi-directional many-to-one association to Ticket
-	@OneToMany(mappedBy="ticketStatus")
-	private List<Ticket> tickets;
+//	//bi-directional many-to-one association to Ticket
+//	@OneToMany(mappedBy="ticketStatus")
+//	private List<Ticket> tickets;
 
 	public TicketStatus() {
 	}
 
-	public TicketStatus(int id, String description, List<Ticket> tickets) {
+	public TicketStatus(int id, String description) {
 		super();
 		this.id = id;
 		this.description = description;
-		this.tickets = tickets;
+		//this.tickets = tickets;
 	}
 
 	public int getId() {
@@ -52,31 +52,31 @@ public class TicketStatus implements Serializable {
 		this.description = description;
 	}
 
-	public List<Ticket> getTickets() {
-		return this.tickets;
-	}
+//	public List<Ticket> getTickets() {
+//		return this.tickets;
+//	}
+//
+//	public void setTickets(List<Ticket> tickets) {
+//		this.tickets = tickets;
+//	}
 
-	public void setTickets(List<Ticket> tickets) {
-		this.tickets = tickets;
-	}
-
-	public Ticket addTicket(Ticket ticket) {
-		getTickets().add(ticket);
-		ticket.setTicketStatus(this);
-
-		return ticket;
-	}
-
-	public Ticket removeTicket(Ticket ticket) {
-		getTickets().remove(ticket);
-		ticket.setTicketStatus(null);
-
-		return ticket;
-	}
+//	public Ticket addTicket(Ticket ticket) {
+//		getTickets().add(ticket);
+//		ticket.setTicketStatus(this);
+//
+//		return ticket;
+//	}
+//
+//	public Ticket removeTicket(Ticket ticket) {
+//		getTickets().remove(ticket);
+//		ticket.setTicketStatus(null);
+//
+//		return ticket;
+//	}
 
 	@Override
 	public String toString() {
-		return "TicketStatus [id=" + id + ", description=" + description + ", tickets=" + tickets + "]";
+		return "TicketStatus [id=" + id + ", description=" + description + "]";
 	}
 
 }

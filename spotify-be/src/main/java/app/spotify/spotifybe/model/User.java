@@ -57,9 +57,9 @@ public class User implements Serializable {
 	@OneToMany(mappedBy = "user")
 	private List<CustomProductPrice> customProductPrices;
 
-	// bi-directional many-to-one association to Message
-	@OneToMany(mappedBy = "user")
-	private List<Message> messages;
+//	// bi-directional many-to-one association to Message
+//	@OneToMany(mappedBy = "user")
+//	private List<Message> messages;
 
 //	// bi-directional many-to-one association to Order
 //	@OneToMany(mappedBy = "user")
@@ -69,9 +69,9 @@ public class User implements Serializable {
 	@OneToMany(mappedBy = "user")
 	private List<Staff> staffs;
 
-	// bi-directional many-to-one association to Ticket
-	@OneToMany(mappedBy = "user")
-	private List<Ticket> tickets;
+//	// bi-directional many-to-one association to Ticket
+//	@OneToMany(mappedBy = "user")
+//	private List<Ticket> tickets;
 
 //	// bi-directional many-to-one association to Transaction
 //	@OneToMany(mappedBy = "user")
@@ -97,8 +97,8 @@ public class User implements Serializable {
 
 	public User(String id, String username, BigDecimal balance, String email, Date lastSignIn, String notifications,
 			String password, String role, Date signUpDate, List<Account> accounts, List<Announcement> announcements,
-			List<CustomProductPrice> customProductPrices, List<Message> messages, //List<Order> orders,
-			List<Staff> staffs, List<Ticket> tickets, //List<Transaction> transactions,
+			List<CustomProductPrice> customProductPrices, //List<Order> orders,
+			List<Staff> staffs, //List<Ticket> tickets, //List<Transaction> transactions,, List<Message> messages, 
 			List<UserPromotion> userPromotions, UserStatus userStatus, List<PaymentMethod> paymentMethods) {
 		super();
 		this.id = id;
@@ -113,10 +113,10 @@ public class User implements Serializable {
 		this.accounts = accounts;
 		this.announcements = announcements;
 		this.customProductPrices = customProductPrices;
-		this.messages = messages;
+		//this.messages = messages;
 		//this.orders = orders;
 		this.staffs = staffs;
-		this.tickets = tickets;
+		//this.tickets = tickets;
 		//this.transactions = transactions;
 		this.userPromotions = userPromotions;
 		this.userStatus = userStatus;
@@ -218,14 +218,14 @@ public class User implements Serializable {
 	public void setCustomProductPrices(List<CustomProductPrice> customProductPrices) {
 		this.customProductPrices = customProductPrices;
 	}
-
-	public List<Message> getMessages() {
-		return messages;
-	}
-
-	public void setMessages(List<Message> messages) {
-		this.messages = messages;
-	}
+//
+//	public List<Message> getMessages() {
+//		return messages;
+//	}
+//
+//	public void setMessages(List<Message> messages) {
+//		this.messages = messages;
+//	}
 
 //	public List<Order> getOrders() {
 //		return orders;
@@ -243,13 +243,13 @@ public class User implements Serializable {
 		this.staffs = staffs;
 	}
 
-	public List<Ticket> getTickets() {
-		return tickets;
-	}
-
-	public void setTickets(List<Ticket> tickets) {
-		this.tickets = tickets;
-	}
+//	public List<Ticket> getTickets() {
+//		return tickets;
+//	}
+//
+//	public void setTickets(List<Ticket> tickets) {
+//		this.tickets = tickets;
+//	}
 
 //	public List<Transaction> getTransactions() {
 //		return transactions;
@@ -292,10 +292,9 @@ public class User implements Serializable {
 		return "User [id=" + id + ", username=" + username + ", balance=" + balance + ", email=" + email
 				+ ", lastSignIn=" + lastSignIn + ", notifications=" + notifications + ", password=" + password
 				+ ", role=" + role + ", signUpDate=" + signUpDate + ", accounts=" + accounts + ", announcements="
-				+ announcements + ", customProductPrices=" + customProductPrices + ", messages=" + messages
-				+ ", staffs=" + staffs + ", tickets=" + tickets + ", userPromotions=" + userPromotions + ", userStatus="
-				+ userStatus + ", paymentMethods=" + paymentMethods + "]";
+				+ announcements + ", customProductPrices=" + customProductPrices + ", staffs=" + staffs
+				+ ", userPromotions=" + userPromotions + ", userStatus=" + userStatus + ", paymentMethods="
+				+ paymentMethods + "]";
 	}
-
 
 }
