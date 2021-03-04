@@ -40,6 +40,7 @@ public class ProductController {
 		int nrOfAcc = 0;
 		for(Product p: products) {
 			ProductAccountsDto dto = new ProductAccountsDto();
+			dto.setId(p.getId());
 			dto.setCreatedAt(p.getCreatedAt());
 			dto.setDeliveryTime(p.getDeliveryTime());
 			dto.setDescription(p.getDescription());
