@@ -40,7 +40,18 @@ public class ProductController {
 		int nrOfAcc = 0;
 		for(Product p: products) {
 			ProductAccountsDto dto = new ProductAccountsDto();
-			dto.setProduct(p);
+			dto.setCreatedAt(p.getCreatedAt());
+			dto.setDeliveryTime(p.getDeliveryTime());
+			dto.setDescription(p.getDescription());
+			dto.setFormat(p.getFormat());
+			dto.setGate(p.getGate());
+			dto.setMaximum(p.getMaximum());
+			dto.setMinimum(p.getMinimum());
+			dto.setPrice(p.getPrice());
+			dto.setProductImage(p.getProductImage());
+			dto.setSort(p.getSort());
+			dto.setTitle(p.getTitle());
+			dto.setWarranty(p.getWarranty());
 			nrOfAcc = accountRepo.findByProductId(p.getId());
 			dto.setNrOfAccounts(nrOfAcc);
 			prodAccounts.add(dto);
