@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import app.spotify.spotifybe.model.Product;
+import app.spotify.spotifybe.model.ProductStatus;
 
 public class ProductAccountsDto {
 	
@@ -20,6 +21,8 @@ public class ProductAccountsDto {
 	private int sort;
 	private String title;
 	private String warranty;
+	private ProductStatus status;
+	
 	private int nrOfAccounts;
 	
 	public ProductAccountsDto() {
@@ -135,6 +138,14 @@ public class ProductAccountsDto {
 	}
 	public void setNrOfAccounts(int nrOfAccounts) {
 		this.nrOfAccounts = nrOfAccounts;
+	}
+
+	public ProductStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(ProductStatus status) {
+		this.status = status;
 	}
 
 }

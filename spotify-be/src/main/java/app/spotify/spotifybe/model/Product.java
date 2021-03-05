@@ -232,19 +232,19 @@ public class Product implements Serializable {
 		this.customProductPrices = customProductPrices;
 	}
 
-	public CustomProductPrice addCustomProductPrice(CustomProductPrice customProductPrice) {
-		getCustomProductPrices().add(customProductPrice);
-		customProductPrice.setProduct(this);
-
-		return customProductPrice;
-	}
-
-	public CustomProductPrice removeCustomProductPrice(CustomProductPrice customProductPrice) {
-		getCustomProductPrices().remove(customProductPrice);
-		customProductPrice.setProduct(null);
-
-		return customProductPrice;
-	}
+//	public CustomProductPrice addCustomProductPrice(CustomProductPrice customProductPrice) {
+//		getCustomProductPrices().add(customProductPrice);
+//		customProductPrice.setProduct(this);
+//
+//		return customProductPrice;
+//	}
+//
+//	public CustomProductPrice removeCustomProductPrice(CustomProductPrice customProductPrice) {
+//		getCustomProductPrices().remove(customProductPrice);
+//		customProductPrice.setProduct(null);
+//
+//		return customProductPrice;
+//	}
 //
 //	public List<Order> getOrders() {
 //		return this.orders;

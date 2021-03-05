@@ -35,7 +35,7 @@ public class CustomProductPrice implements Serializable {
 	@JoinColumn(name="product_id")
 	private Product product;
 
-	//bi-directional many-to-one association to User
+//	//bi-directional many-to-one association to User
 	@ManyToOne
 	@JoinColumn(name="uuid")
 	private User user;
@@ -85,6 +85,12 @@ public class CustomProductPrice implements Serializable {
 		this.startDate = startDate;
 	}
 
+	@Override
+	public String toString() {
+		return "CustomProductPrice [id=" + id + ", startDate=" + startDate + ", endDate=" + endDate + ", price=" + price
+				+ "]";
+	}
+
 	public Product getProduct() {
 		return this.product;
 	}
@@ -101,10 +107,5 @@ public class CustomProductPrice implements Serializable {
 		this.user = user;
 	}
 
-	@Override
-	public String toString() {
-		return "CustomProductPrice [id=" + id + ", startDate=" + startDate + ", endDate=" + endDate + ", price=" + price
-				+ ", product=" + product + ", user=" + user + "]";
-	}
 
 }
