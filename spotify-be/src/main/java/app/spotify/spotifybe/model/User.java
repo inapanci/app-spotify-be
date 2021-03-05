@@ -54,8 +54,8 @@ public class User implements Serializable {
 	private List<Announcement> announcements;
 
 	// bi-directional many-to-one association to CustomProductPrice
-	@OneToMany(mappedBy = "user")
-	private List<CustomProductPrice> customProductPrices;
+//	@OneToMany(mappedBy = "user")
+//	private List<CustomProductPrice> customProductPrices;
 
 //	// bi-directional many-to-one association to Message
 //	@OneToMany(mappedBy = "user")
@@ -97,7 +97,7 @@ public class User implements Serializable {
 
 	public User(String id, String username, BigDecimal balance, String email, Date lastSignIn, String notifications,
 			String password, String role, Date signUpDate, List<Account> accounts, List<Announcement> announcements,
-			List<CustomProductPrice> customProductPrices, //List<Order> orders,
+			//List<CustomProductPrice> customProductPrices, //List<Order> orders,
 			List<Staff> staffs, //List<Ticket> tickets, //List<Transaction> transactions,, List<Message> messages, 
 			List<UserPromotion> userPromotions, UserStatus userStatus, List<PaymentMethod> paymentMethods) {
 		super();
@@ -112,7 +112,7 @@ public class User implements Serializable {
 		this.signUpDate = signUpDate;
 		this.accounts = accounts;
 		this.announcements = announcements;
-		this.customProductPrices = customProductPrices;
+		//this.customProductPrices = customProductPrices;
 		//this.messages = messages;
 		//this.orders = orders;
 		this.staffs = staffs;
@@ -211,13 +211,13 @@ public class User implements Serializable {
 		this.announcements = announcements;
 	}
 
-	public List<CustomProductPrice> getCustomProductPrices() {
-		return customProductPrices;
-	}
-
-	public void setCustomProductPrices(List<CustomProductPrice> customProductPrices) {
-		this.customProductPrices = customProductPrices;
-	}
+//	public List<CustomProductPrice> getCustomProductPrices() {
+//		return customProductPrices;
+//	}
+//
+//	public void setCustomProductPrices(List<CustomProductPrice> customProductPrices) {
+//		this.customProductPrices = customProductPrices;
+//	}
 //
 //	public List<Message> getMessages() {
 //		return messages;
@@ -292,9 +292,8 @@ public class User implements Serializable {
 		return "User [id=" + id + ", username=" + username + ", balance=" + balance + ", email=" + email
 				+ ", lastSignIn=" + lastSignIn + ", notifications=" + notifications + ", password=" + password
 				+ ", role=" + role + ", signUpDate=" + signUpDate + ", accounts=" + accounts + ", announcements="
-				+ announcements + ", customProductPrices=" + customProductPrices + ", staffs=" + staffs
-				+ ", userPromotions=" + userPromotions + ", userStatus=" + userStatus + ", paymentMethods="
-				+ paymentMethods + "]";
+				+ announcements + ", staffs=" + staffs + ", userPromotions=" + userPromotions + ", userStatus="
+				+ userStatus + ", paymentMethods=" + paymentMethods + "]";
 	}
 
 }

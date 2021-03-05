@@ -58,9 +58,9 @@ public class Product implements Serializable {
 //	@OneToMany(mappedBy="product")
 //	private List<Account> accounts;
 
-	//bi-directional many-to-one association to CustomProductPrice
-	@OneToMany(mappedBy="product")
-	private List<CustomProductPrice> customProductPrices;
+//	//bi-directional many-to-one association to CustomProductPrice
+//	@OneToMany(mappedBy="product")
+//	private List<CustomProductPrice> customProductPrices;
 
 //	//bi-directional many-to-one association to Order
 //	@OneToMany(mappedBy="product")
@@ -76,8 +76,8 @@ public class Product implements Serializable {
 
 	public Product(int id, Date createdAt, Date deliveryTime, String description, String format, int gate, int maximum,
 			int minimum, BigDecimal price, byte[] productImage, int sort, String title, String warranty,
-			 List<CustomProductPrice> customProductPrices, //List<Order> orders, List<Account> accounts,
-			ProductStatus productStatus) {
+			 List<CustomProductPrice> customProductPrices //List<Order> orders, List<Account> accounts, ProductStatus productStatus
+			 ) {
 		super();
 		this.id = id;
 		this.createdAt = createdAt;
@@ -93,7 +93,7 @@ public class Product implements Serializable {
 		this.title = title;
 		this.warranty = warranty;
 		//this.accounts = accounts;
-		this.customProductPrices = customProductPrices;
+	//	this.customProductPrices = customProductPrices;
 		//this.orders = orders;
 		this.productStatus = productStatus;
 	}
@@ -224,13 +224,13 @@ public class Product implements Serializable {
 //		return account;
 //	}
 
-	public List<CustomProductPrice> getCustomProductPrices() {
-		return this.customProductPrices;
-	}
-
-	public void setCustomProductPrices(List<CustomProductPrice> customProductPrices) {
-		this.customProductPrices = customProductPrices;
-	}
+//	public List<CustomProductPrice> getCustomProductPrices() {
+//		return this.customProductPrices;
+//	}
+//
+//	public void setCustomProductPrices(List<CustomProductPrice> customProductPrices) {
+//		this.customProductPrices = customProductPrices;
+//	}
 
 //	public CustomProductPrice addCustomProductPrice(CustomProductPrice customProductPrice) {
 //		getCustomProductPrices().add(customProductPrice);
@@ -281,8 +281,7 @@ public class Product implements Serializable {
 		return "Product [id=" + id + ", createdAt=" + createdAt + ", deliveryTime=" + deliveryTime + ", description="
 				+ description + ", format=" + format + ", gate=" + gate + ", maximum=" + maximum + ", minimum="
 				+ minimum + ", price=" + price + ", productImage=" + Arrays.toString(productImage) + ", sort=" + sort
-				+ ", title=" + title + ", warranty=" + warranty + ", customProductPrices=" + customProductPrices
-				+ ", productStatus=" + productStatus + "]";
+				+ ", title=" + title + ", warranty=" + warranty + ", productStatus=" + productStatus + "]";
 	}
 
 }

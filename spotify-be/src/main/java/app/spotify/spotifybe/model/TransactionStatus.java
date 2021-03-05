@@ -22,17 +22,17 @@ public class TransactionStatus implements Serializable {
 	private String description;
 
 	//bi-directional many-to-one association to Transaction
-	@OneToMany(mappedBy="transactionStatus")
-	private List<Transaction> transactions;
+//	@OneToMany(mappedBy="transactionStatus")
+//	private List<Transaction> transactions;
 
 	public TransactionStatus() {
 	}
 
-	public TransactionStatus(int id, String description, List<Transaction> transactions) {
+	public TransactionStatus(int id, String description) {
 		super();
 		this.id = id;
 		this.description = description;
-		this.transactions = transactions;
+		//this.transactions = transactions;
 	}
 
 	public int getId() {
@@ -51,31 +51,31 @@ public class TransactionStatus implements Serializable {
 		this.description = description;
 	}
 
-	public List<Transaction> getTransactions() {
-		return this.transactions;
-	}
+//	public List<Transaction> getTransactions() {
+//		return this.transactions;
+//	}
+//
+//	public void setTransactions(List<Transaction> transactions) {
+//		this.transactions = transactions;
+//	}
 
-	public void setTransactions(List<Transaction> transactions) {
-		this.transactions = transactions;
-	}
-
-	public Transaction addTransaction(Transaction transaction) {
-		getTransactions().add(transaction);
-		transaction.setTransactionStatus(this);
-
-		return transaction;
-	}
-
-	public Transaction removeTransaction(Transaction transaction) {
-		getTransactions().remove(transaction);
-		transaction.setTransactionStatus(null);
-
-		return transaction;
-	}
+//	public Transaction addTransaction(Transaction transaction) {
+//		getTransactions().add(transaction);
+//		transaction.setTransactionStatus(this);
+//
+//		return transaction;
+//	}
+//
+//	public Transaction removeTransaction(Transaction transaction) {
+//		getTransactions().remove(transaction);
+//		transaction.setTransactionStatus(null);
+//
+//		return transaction;
+//	}
 
 	@Override
 	public String toString() {
-		return "TransactionStatus [id=" + id + ", description=" + description + ", transactions=" + transactions + "]";
+		return "TransactionStatus [id=" + id + ", description=" + description  + "]";
 	}
 
 }

@@ -67,7 +67,6 @@ public class ProductController {
 		product.setMaximum(p.getMaximum());
 		product.setMinimum(p.getMinimum());
 		product.setCreatedAt(java.sql.Timestamp.valueOf(LocalDateTime.now()));
-		product.setCustomProductPrices(p.getCustomProductPrices());
 		product.setGate(p.getGate());
 		product.setDescription(p.getDescription());
 		product.setFormat(p.getFormat());
