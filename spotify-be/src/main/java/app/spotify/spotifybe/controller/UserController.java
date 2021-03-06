@@ -1,10 +1,13 @@
 package app.spotify.spotifybe.controller;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +41,23 @@ public class UserController {
 		userRepo.save(u);
 		return user;
 		
+	}
+	
+	@PostMapping("/user/addNew")
+	public User addNewUser(@RequestBody User usr) {
+		User u = new User();
+		u.setId(usr.getId());
+		u.setUsername(usr.getUsername());
+		u.setEmail(usr.getEmail());
+		u.setPassword(usr.getPassword());
+		u.setRole(usr.getRole());
+		u.setBalance(BigDecimal.valueOf(0.0));
+		u.setLastSignIn(java.sql.Timestamp.valueOf(LocalDateTime.now()));
+		u.setNotifications(usr.getNotifications());
+		u.setSignUpDate(java.sql.Timestamp.valueOf(LocalDateTime.now()));
+		u.setUserStatus(usr.getUserStatus());
+		userRepo.save(u);
+		return u; 
 	}
 
 }
