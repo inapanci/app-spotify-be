@@ -48,9 +48,9 @@ public class User implements Serializable {
 			@JoinColumn(name = "account_id") })
 	private List<Account> accounts;
 
-	// bi-directional many-to-one association to Announcement
-	@OneToMany(mappedBy = "user")
-	private List<Announcement> announcements;
+//	// bi-directional many-to-one association to Announcement
+//	@OneToMany(mappedBy = "user")
+//	private List<Announcement> announcements;
 
 	// bi-directional many-to-one association to CustomProductPrice
 //	@OneToMany(mappedBy = "user")
@@ -95,7 +95,7 @@ public class User implements Serializable {
 	}
 
 	public User(String id, String username, BigDecimal balance, String email, Date lastSignIn, String notifications,
-			String password, String role, Date signUpDate, List<Account> accounts, List<Announcement> announcements,
+			String password, String role, Date signUpDate, List<Account> accounts, //List<Announcement> announcements,
 			//List<CustomProductPrice> customProductPrices, //List<Order> orders,
 			List<Staff> staffs, //List<Ticket> tickets, //List<Transaction> transactions,, List<Message> messages, 
 			List<UserPromotion> userPromotions, UserStatus userStatus, List<PaymentMethod> paymentMethods) {
@@ -110,7 +110,7 @@ public class User implements Serializable {
 		this.role = role;
 		this.signUpDate = signUpDate;
 		this.accounts = accounts;
-		this.announcements = announcements;
+		//this.announcements = announcements;
 		//this.customProductPrices = customProductPrices;
 		//this.messages = messages;
 		//this.orders = orders;
@@ -202,13 +202,13 @@ public class User implements Serializable {
 		this.accounts = accounts;
 	}
 
-	public List<Announcement> getAnnouncements() {
-		return announcements;
-	}
-
-	public void setAnnouncements(List<Announcement> announcements) {
-		this.announcements = announcements;
-	}
+//	public List<Announcement> getAnnouncements() {
+//		return announcements;
+//	}
+//
+//	public void setAnnouncements(List<Announcement> announcements) {
+//		this.announcements = announcements;
+//	}
 
 //	public List<CustomProductPrice> getCustomProductPrices() {
 //		return customProductPrices;
@@ -290,8 +290,7 @@ public class User implements Serializable {
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", balance=" + balance + ", email=" + email
 				+ ", lastSignIn=" + lastSignIn + ", notifications=" + notifications + ", password=" + password
-				+ ", role=" + role + ", signUpDate=" + signUpDate + ", accounts=" + accounts + ", announcements="
-				+ announcements + ", staffs=" + staffs + ", userPromotions=" + userPromotions + ", userStatus="
+				+ ", role=" + role + ", signUpDate=" + signUpDate + ", accounts=" + accounts + ", staffs=" + staffs + ", userPromotions=" + userPromotions + ", userStatus="
 				+ userStatus + ", paymentMethods=" + paymentMethods + "]";
 	}
 
