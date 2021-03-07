@@ -1,6 +1,7 @@
 package app.spotify.spotifybe.controller;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import app.spotify.spotifybe.dto.TransactionUserDto;
 import app.spotify.spotifybe.model.Transaction;
 import app.spotify.spotifybe.repository.TransactionRepository;
 
@@ -26,6 +28,26 @@ public class TransactionController {
 	@GetMapping("/transaction/getAll")
 	public List<Transaction> getAllTransactions(){
 		return transactionRepo.findAll();
+	}
+	
+	@GetMapping("/transaction/getTransactionUser")
+	public List<TransactionUserDto> getAllTransactionUser(){
+		List<Transaction> transactions = transactionRepo.findAll();
+		List<TransactionUserDto> transacUser = new ArrayList<>();
+		for(Transaction t : transactions) {
+			TransactionUserDto dto = new TransactionUserDto();
+			dto.setId(t.getId());
+			dto.setAmount(t.getAmount());
+			dto.setCreatedAt(t.getCreatedAt());
+			dto.setDescription(t.getDescription());
+			dto.setTransactionStatus(t.getTransactionStatus());
+			dto.setTransactionId(t.getTransactionId());
+			dto.setPaymentMethod(t.getPaymentMethod());
+			dto.setUsersUsername(t.getUser().getUsername());
+			dto.setUsersEmail(t.getUser().getEmail());
+			transacUser.add(dto);
+		}
+		return transacUser;
 	}
 	
 	@PutMapping("/transaction/updateTransaction")
