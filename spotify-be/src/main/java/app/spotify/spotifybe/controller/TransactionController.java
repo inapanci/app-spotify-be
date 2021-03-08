@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import app.spotify.spotifybe.dto.TransactionUserDto;
@@ -28,6 +29,12 @@ public class TransactionController {
 	@GetMapping("/transaction/getAll")
 	public List<Transaction> getAllTransactions(){
 		return transactionRepo.findAll();
+	}
+	
+	@GetMapping("/transaction/getOne")
+	public Object getAllTransactions(@RequestParam long id){
+		System.out.println(id);
+		return transactionRepo.findById(id);
 	}
 	
 	@GetMapping("/transaction/getTransactionUser")
