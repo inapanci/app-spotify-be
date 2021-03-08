@@ -11,8 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import app.spotify.spotifybe.model.Message;
+import app.spotify.spotifybe.model.Ticket;
 import app.spotify.spotifybe.repository.MessageRepository;
+import app.spotify.spotifybe.repository.TicketRepository;
+import app.spotify.spotifybe.repository.TicketStatusRepository;
+import app.spotify.spotifybe.repository.TransactionStatusRepository;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -21,6 +26,12 @@ public class MessageController {
 	
 	@Autowired
 	MessageRepository messageRepo;
+	
+	@Autowired
+	TicketRepository ticketRepo;
+	
+	@Autowired
+	TicketStatusRepository tStatusRepo;
 	
 	@GetMapping("/message/getById")
 	public Message getMessageById(@RequestParam("messageId") long mId) {
@@ -34,7 +45,13 @@ public class MessageController {
 		m.setCreatedAt(java.sql.Timestamp.valueOf(LocalDateTime.now()));
 		m.setRead(msg.getRead());
 		m.setUser(msg.getUser());
-		m.setTicket(msg.getTicket());
+		
+		if(msg.getTicket().getTicketStatus().getDescription().equals("pending")) {
+			Ticket ticket = msg.getTicket();
+			ticket.setTicketStatus(tStatusRepo.findByDescription("ongoing"));
+			ticketRepo.save(ticket);
+			m.setTicket(ticket);
+		}
 		messageRepo.save(m);
 		return m;
 		

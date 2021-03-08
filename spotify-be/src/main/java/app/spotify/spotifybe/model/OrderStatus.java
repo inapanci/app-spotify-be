@@ -26,18 +26,18 @@ public class OrderStatus implements Serializable {
 	private String notes;
 
 	//bi-directional many-to-one association to Order
-	@OneToMany(mappedBy="orderStatus")
-	private List<Order> orders;
+//	@OneToMany(mappedBy="orderStatus")
+//	private List<Order> orders;
 
 	public OrderStatus() {
 	}
 
-	public OrderStatus(int id, String description, String notes, List<Order> orders) {
+	public OrderStatus(int id, String description, String notes) {
 		super();
 		this.id = id;
 		this.description = description;
 		this.notes = notes;
-		this.orders = orders;
+		//this.orders = orders;
 	}
 
 	public int getId() {
@@ -64,32 +64,31 @@ public class OrderStatus implements Serializable {
 		this.notes = notes;
 	}
 
-	public List<Order> getOrders() {
-		return this.orders;
-	}
-
-	public void setOrders(List<Order> orders) {
-		this.orders = orders;
-	}
-
-	public Order addOrder(Order order) {
-		getOrders().add(order);
-		order.setOrderStatus(this);
-
-		return order;
-	}
-
-	public Order removeOrder(Order order) {
-		getOrders().remove(order);
-		order.setOrderStatus(null);
-
-		return order;
-	}
+//	public List<Order> getOrders() {
+//		return this.orders;
+//	}
+//
+//	public void setOrders(List<Order> orders) {
+//		this.orders = orders;
+//	}
+//
+//	public Order addOrder(Order order) {
+//		getOrders().add(order);
+//		order.setOrderStatus(this);
+//
+//		return order;
+//	}
+//
+//	public Order removeOrder(Order order) {
+//		getOrders().remove(order);
+//		order.setOrderStatus(null);
+//
+//		return order;
+//	}
 
 	@Override
 	public String toString() {
-		return "OrderStatus [id=" + id + ", description=" + description + ", notes=" + notes + ", orders=" + orders
-				+ "]";
+		return "OrderStatus [id=" + id + ", description=" + description + ", notes=" + notes + "]";
 	}
 
 }

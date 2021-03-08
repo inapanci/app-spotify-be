@@ -6,4 +6,6 @@ import app.spotify.spotifybe.model.OrderStatus;
 
 public interface OrderStatusRepository extends JpaRepository<OrderStatus,Integer>{
 
+	OrderStatus findByDescription(String string);
+
 }

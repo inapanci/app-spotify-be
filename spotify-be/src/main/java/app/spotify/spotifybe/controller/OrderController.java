@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import app.spotify.spotifybe.model.Order;
 import app.spotify.spotifybe.repository.OrderRepository;
+import app.spotify.spotifybe.repository.OrderStatusRepository;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -22,6 +23,9 @@ public class OrderController {
 	
 	@Autowired
 	OrderRepository orderRepo;
+	
+	@Autowired
+	OrderStatusRepository oStatusRepo;
 	
 	@GetMapping("/order/getAll")
 	public List<Order> getAllOrders(){
@@ -37,7 +41,7 @@ public class OrderController {
 	public Order addNewOrder(@RequestBody Order order) {
 		Order o = new Order();
 		o.setOrderDate(java.sql.Timestamp.valueOf(LocalDateTime.now()));
-		o.setOrderStatus(order.getOrderStatus());
+		o.setOrderStatus(oStatusRepo.findByDescription("ready"));
 		o.setProduct(order.getProduct());
 		o.setQuantity(order.getQuantity());
 		o.setUser(order.getUser());
