@@ -33,6 +33,10 @@ public class TicketController {
 		return ticketRepo.findById(ticketId).orElseThrow( () -> new RuntimeException("ticket not found."));
 	}
 	
+	@GetMapping("/ticket/getAllOfUser")
+	public List<Ticket> getTicketsOfUser(@RequestParam("userId") String uuid) {
+		return ticketRepo.findByUserId(uuid);
+	}
 		
 	@PutMapping("/ticket/updateTicket")
 	public Ticket updateTicketStatus(@RequestBody Ticket t) {
