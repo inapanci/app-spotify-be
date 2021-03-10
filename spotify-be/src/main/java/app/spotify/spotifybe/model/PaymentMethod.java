@@ -22,23 +22,23 @@ public class PaymentMethod implements Serializable {
 	@Column(name="description", length=100)
 	private String description;
 
-	//bi-directional many-to-one association to Transaction
-	@OneToMany(mappedBy="paymentMethod")
-	private List<Transaction> transactions;
-
-	//bi-directional many-to-many association to User
-	@ManyToMany(mappedBy="paymentMethods")
-	private List<User> users;
+//	//bi-directional many-to-one association to Transaction
+//	@OneToMany(mappedBy="paymentMethod")
+//	private List<Transaction> transactions;
+//
+//	//bi-directional many-to-many association to User
+//	@ManyToMany(mappedBy="paymentMethods")
+//	private List<User> users;
 
 	public PaymentMethod() {
 	}
 
-	public PaymentMethod(int id, String description, List<Transaction> transactions, List<User> users) {
+	public PaymentMethod(int id, String description) {
 		super();
 		this.id = id;
 		this.description = description;
-		this.transactions = transactions;
-		this.users = users;
+		//this.transactions = transactions;
+		//this.users = users;
 	}
 
 	public int getId() {
@@ -57,40 +57,39 @@ public class PaymentMethod implements Serializable {
 		this.description = description;
 	}
 
-	public List<Transaction> getTransactions() {
-		return this.transactions;
-	}
+//	public List<Transaction> getTransactions() {
+//		return this.transactions;
+//	}
+//
+//	public void setTransactions(List<Transaction> transactions) {
+//		this.transactions = transactions;
+//	}
 
-	public void setTransactions(List<Transaction> transactions) {
-		this.transactions = transactions;
-	}
-
-	public Transaction addTransaction(Transaction transaction) {
-		getTransactions().add(transaction);
-		transaction.setPaymentMethod(this);
-
-		return transaction;
-	}
-
-	public Transaction removeTransaction(Transaction transaction) {
-		getTransactions().remove(transaction);
-		transaction.setPaymentMethod(null);
-
-		return transaction;
-	}
-
-	public List<User> getUsers() {
-		return this.users;
-	}
-
-	public void setUsers(List<User> users) {
-		this.users = users;
-	}
+//	public Transaction addTransaction(Transaction transaction) {
+//		getTransactions().add(transaction);
+//		transaction.setPaymentMethod(this);
+//
+//		return transaction;
+//	}
+//
+//	public Transaction removeTransaction(Transaction transaction) {
+//		getTransactions().remove(transaction);
+//		transaction.setPaymentMethod(null);
+//
+//		return transaction;
+//	}
+//
+//	public List<User> getUsers() {
+//		return this.users;
+//	}
+//
+//	public void setUsers(List<User> users) {
+//		this.users = users;
+//	}
 
 	@Override
 	public String toString() {
-		return "PaymentMethod [id=" + id + ", description=" + description + ", transactions=" + transactions
-				+ ", users=" + users + "]";
+		return "PaymentMethod [id=" + id + ", description=" + description + "]";
 	}
 
 }

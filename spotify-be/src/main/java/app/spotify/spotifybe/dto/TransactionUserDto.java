@@ -13,7 +13,7 @@ public class TransactionUserDto {
 	private Date createdAt;
 	private String description;
 	private String transactionId;
-	private PaymentMethod paymentMethod;
+	private String paymentMethod;
 	private String transactionStatus;
 	private String usersUsername;
 	private String usersEmail;
@@ -53,10 +53,10 @@ public class TransactionUserDto {
 	public void setTransactionId(String transactionId) {
 		this.transactionId = transactionId;
 	}
-	public PaymentMethod getPaymentMethod() {
+	public String getPaymentMethod() {
 		return paymentMethod;
 	}
-	public void setPaymentMethod(PaymentMethod paymentMethod) {
+	public void setPaymentMethod(String paymentMethod) {
 		this.paymentMethod = paymentMethod;
 	}
 	public String getTransactionStatus() {
