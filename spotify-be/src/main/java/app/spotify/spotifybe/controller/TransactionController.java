@@ -47,7 +47,7 @@ public class TransactionController {
 			dto.setAmount(t.getAmount());
 			dto.setCreatedAt(t.getCreatedAt());
 			dto.setDescription(t.getDescription());
-			dto.setTransactionStatus(t.getTransactionStatus());
+			dto.setTransactionStatus(t.getTransactionStatus().getDescription());
 			dto.setTransactionId(t.getTransactionId());
 			dto.setPaymentMethod(t.getPaymentMethod());
 			dto.setUsersUsername(t.getUser().getUsername());

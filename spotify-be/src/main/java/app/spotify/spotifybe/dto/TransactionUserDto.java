@@ -14,7 +14,7 @@ public class TransactionUserDto {
 	private String description;
 	private String transactionId;
 	private PaymentMethod paymentMethod;
-	private TransactionStatus transactionStatus;
+	private String transactionStatus;
 	private String usersUsername;
 	private String usersEmail;
 	
@@ -59,10 +59,10 @@ public class TransactionUserDto {
 	public void setPaymentMethod(PaymentMethod paymentMethod) {
 		this.paymentMethod = paymentMethod;
 	}
-	public TransactionStatus getTransactionStatus() {
+	public String getTransactionStatus() {
 		return transactionStatus;
 	}
-	public void setTransactionStatus(TransactionStatus transactionStatus) {
+	public void setTransactionStatus(String transactionStatus) {
 		this.transactionStatus = transactionStatus;
 	}
 	public String getUsersUsername() {
