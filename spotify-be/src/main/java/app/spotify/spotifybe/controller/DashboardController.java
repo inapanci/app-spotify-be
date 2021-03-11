@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import app.spotify.spotifybe.dto.DashboardDto;
+import app.spotify.spotifybe.dto.OrderDashboardDto;
 import app.spotify.spotifybe.repository.AccountRepository;
 import app.spotify.spotifybe.repository.OrderRepository;
 import app.spotify.spotifybe.repository.ProductRepository;
@@ -47,5 +48,16 @@ public class DashboardController {
 		dash.setConversionRate((dash.getNrOfClients()/dash.getRevenue())*100);
 		return dash;
 	}
+	
+	@GetMapping("/dashboard/getOrdersInDash")
+	public OrderDashboardDto getOrderDashboard() {
+		OrderDashboardDto dto = new OrderDashboardDto();
+		dto.setCanceledOrders(orderRepo.findByOrderStatusDescription("canceled").size());
+		dto.setCompletedOrders(orderRepo.findByOrderStatusDescription("completed").size());
+		dto.setProcessingOrders(orderRepo.findByOrderStatusDescription("processing").size());
+		dto.setReplacements(orderRepo.findByOrderStatusDescription("replacement").size());
+		return dto;
+	}
+	
 
 }

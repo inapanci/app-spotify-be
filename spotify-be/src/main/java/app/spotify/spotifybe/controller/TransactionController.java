@@ -47,11 +47,12 @@ public class TransactionController {
 			dto.setAmount(t.getAmount());
 			dto.setCreatedAt(t.getCreatedAt());
 			dto.setDescription(t.getDescription());
-			dto.setTransactionStatus(t.getTransactionStatus().getDescription());
+			dto.setTransactionStatus(t.getTransactionStatus().getDescription());  //pyet si do vendoset initially
 			dto.setTransactionId(t.getTransactionId());
 			dto.setPaymentMethod(t.getPaymentMethod().getDescription());
 			dto.setUsersUsername(t.getUser().getUsername());
 			dto.setUsersEmail(t.getUser().getEmail());
+			dto.setUser(t.getUser());
 			transacUser.add(dto);
 		}
 		return transacUser;

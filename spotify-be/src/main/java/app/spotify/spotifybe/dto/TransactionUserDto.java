@@ -5,6 +5,7 @@ import java.util.Date;
 
 import app.spotify.spotifybe.model.PaymentMethod;
 import app.spotify.spotifybe.model.TransactionStatus;
+import app.spotify.spotifybe.model.User;
 
 public class TransactionUserDto {
 	
@@ -17,6 +18,7 @@ public class TransactionUserDto {
 	private String transactionStatus;
 	private String usersUsername;
 	private String usersEmail;
+	private User user;
 	
 	
 	public TransactionUserDto() {
@@ -76,6 +78,12 @@ public class TransactionUserDto {
 	}
 	public void setUsersEmail(String usersEmail) {
 		this.usersEmail = usersEmail;
+	}
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 }

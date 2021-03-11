@@ -1,5 +1,7 @@
 package app.spotify.spotifybe.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -12,5 +14,7 @@ public interface OrderRepository extends JpaRepository<Order,Long>{
 
 	@Query("Select count(u) From User u Where u.id in (Select o.user.id from Order o)")
 	public int findClients();
+
+	public List<Order> findByOrderStatusDescription(String descr);
 
 }
