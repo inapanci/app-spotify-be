@@ -1,6 +1,7 @@
 package app.spotify.spotifybe.controller;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import app.spotify.spotifybe.dto.OrderUserProdDto;
 import app.spotify.spotifybe.model.Order;
 import app.spotify.spotifybe.repository.OrderRepository;
 import app.spotify.spotifybe.repository.OrderStatusRepository;
@@ -30,6 +32,25 @@ public class OrderController {
 	@GetMapping("/order/getAll")
 	public List<Order> getAllOrders(){
 		return orderRepo.findAll();
+	}
+	
+	@GetMapping("/order/getAllDto")
+	public List<OrderUserProdDto> getAllDto(){
+		List<Order> orders = orderRepo.findAll();
+		List<OrderUserProdDto> orderUserProd = new ArrayList<>();
+		for(Order o : orders) {
+			OrderUserProdDto dto = new OrderUserProdDto();
+			dto.setId(o.getId());
+			dto.setOrderDate(o.getOrderDate());
+			dto.setProductName(o.getProduct().getDescription());
+			dto.setQuantity(o.getQuantity());
+			dto.setUser(o.getUser());
+			dto.setUserEmail(o.getUser().getEmail());
+			dto.setUserName(o.getUser().getUsername());
+			dto.setValue(o.getValue());
+			orderUserProd.add(dto);
+		}
+		return orderUserProd;
 	}
 	
 	@GetMapping("/order/getById")
