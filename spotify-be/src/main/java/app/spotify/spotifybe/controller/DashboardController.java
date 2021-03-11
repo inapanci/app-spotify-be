@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import app.spotify.spotifybe.dto.DashboardDto;
 import app.spotify.spotifybe.dto.OrderDashboardDto;
+import app.spotify.spotifybe.dto.TicketDashboardDto;
 import app.spotify.spotifybe.repository.AccountRepository;
+import app.spotify.spotifybe.repository.MessageRepository;
 import app.spotify.spotifybe.repository.OrderRepository;
 import app.spotify.spotifybe.repository.ProductRepository;
 import app.spotify.spotifybe.repository.TicketRepository;
@@ -34,6 +36,9 @@ public class DashboardController {
 	@Autowired
 	UserRepository userRepo;
 	
+	@Autowired
+	MessageRepository messageRepo;
+	
 	
 	@GetMapping("/dashboard/getAll")
 	public DashboardDto getDashboard() {
@@ -56,6 +61,16 @@ public class DashboardController {
 		dto.setCompletedOrders(orderRepo.findByOrderStatusDescription("completed").size());
 		dto.setProcessingOrders(orderRepo.findByOrderStatusDescription("processing").size());
 		dto.setReplacements(orderRepo.findByOrderStatusDescription("replacement").size());
+		return dto;
+	}
+	
+	@GetMapping("/dashboard/getTicketsInDash")
+	public TicketDashboardDto getTicketsDashboard() {
+		TicketDashboardDto dto = new TicketDashboardDto();
+		dto.setClosedTickets(ticketRepo.findByTicketStatusDescription("closed").size());
+		dto.setOpenedTickets(ticketRepo.findByTicketStatusDescription("opened").size());
+		dto.setPendingTickets(ticketRepo.findByTicketStatusDescription("pending").size());
+		dto.setNewReplies(messageRepo.getNewReplies().size());
 		return dto;
 	}
 	

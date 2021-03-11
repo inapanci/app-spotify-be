@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import app.spotify.spotifybe.model.Order;
 import app.spotify.spotifybe.model.Ticket;
 
 public interface TicketRepository extends JpaRepository<Ticket,Integer>{
@@ -13,5 +14,7 @@ public interface TicketRepository extends JpaRepository<Ticket,Integer>{
 
 	@Query("Select t from Ticket t where t.user.id = ?1 and t.ticketStatus.description = 'pending'")
 	List<Ticket> findPendingOfUser(String uuid);
+
+	List<Ticket> findByTicketStatusDescription(String descr);
 
 }
