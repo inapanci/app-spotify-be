@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import app.spotify.spotifybe.dto.UserDashboardDto;
 import app.spotify.spotifybe.model.User;
+import app.spotify.spotifybe.repository.OrderRepository;
+import app.spotify.spotifybe.repository.TicketRepository;
 import app.spotify.spotifybe.repository.UserRepository;
 
 @CrossOrigin(origins = "*")
@@ -25,6 +28,12 @@ public class UserController {
 	@Autowired
 	UserRepository userRepo;
 	
+	@Autowired
+	OrderRepository orderRepo;
+	
+	@Autowired
+	TicketRepository ticketRepo;
+	
 	@GetMapping("/user/getAll")
 	public List<User> getAllUsers(){
 		return userRepo.findAll();
@@ -33,6 +42,19 @@ public class UserController {
 	@GetMapping("/user/getById")
 	public User getById(@RequestParam("userId") String uuid) {
 		return userRepo.findById(uuid).orElseThrow(()->new RuntimeException("user not found"));
+	}
+	
+	@GetMapping("/user/userDetails")
+	public UserDashboardDto getUserDetails(@RequestParam("userId") String uuid) {
+		UserDashboardDto dto = new UserDashboardDto();
+		User user = userRepo.findById(uuid).orElseThrow(()-> new RuntimeException("user not found"));
+		dto.setAccountsPurchased(orderRepo.getAccountsPurchased(uuid));
+		dto.setAmountSpent(orderRepo.getAmountSpent(uuid));
+		dto.setLastSignIn(user.getLastSignIn());
+		dto.setSignUpDate(user.getSignUpDate());
+		dto.setTotalOrders(orderRepo.findByUserId(uuid).size());
+		dto.setTotalTickets(ticketRepo.findByUserId(uuid).size());		
+		return dto;
 	}
 	
 	@PutMapping("/user/update")
