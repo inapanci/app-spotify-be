@@ -1,5 +1,6 @@
 package app.spotify.spotifybe.controller;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +11,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import app.spotify.spotifybe.dto.ProductAccountsDto;
 import app.spotify.spotifybe.model.Product;
@@ -61,20 +66,21 @@ public class ProductController {
 	}
 	
 	@PostMapping("/product/addProduct")
-	public Product addNewProduct(@RequestBody Product p) {
-		Product product = new Product();
-		product.setTitle(p.getTitle());
-		product.setMaximum(p.getMaximum());
-		product.setMinimum(p.getMinimum());
-		product.setCreatedAt(java.sql.Timestamp.valueOf(LocalDateTime.now()));
-		product.setGate(p.getGate());
-		product.setDescription(p.getDescription());
-		product.setFormat(p.getFormat());
-		product.setPrice(p.getPrice());
-		product.setProductStatus(p.getProductStatus());
-		product.setSort(p.getSort());
-		product.setDeliveryTime(p.getDeliveryTime());
-		product.setWarranty(p.getWarranty());
+	public Product addNewProduct(@RequestParam("productInfo") String productInfo,  @RequestParam("file") MultipartFile file) throws IOException {
+		Product product = new ObjectMapper().readValue(productInfo, Product.class);
+//		product.setTitle(p.getTitle());
+//		product.setMaximum(p.getMaximum());
+//		product.setMinimum(p.getMinimum());
+//		product.setCreatedAt(java.sql.Timestamp.valueOf(LocalDateTime.now()));
+//		product.setGate(p.getGate());
+//		product.setDescription(p.getDescription());
+//		product.setFormat(p.getFormat());
+//		product.setPrice(p.getPrice());
+//		product.setProductStatus(p.getProductStatus());
+//		product.setSort(p.getSort());
+//		product.setDeliveryTime(p.getDeliveryTime());
+//		product.setWarranty(p.getWarranty());
+		product.setProductImage(file.getBytes());
 		productRepo.save(product);
 		return product;
 	}
