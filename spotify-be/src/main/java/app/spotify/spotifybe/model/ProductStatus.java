@@ -23,17 +23,17 @@ public class ProductStatus implements Serializable {
 	private String description;
 
 	//bi-directional many-to-one association to Product
-	@OneToMany(mappedBy="productStatus")
-	private List<Product> products;
+//	@OneToMany(mappedBy="productStatus")
+//	private List<Product> products;
 
 	public ProductStatus() {
 	}
 
-	public ProductStatus(int id, String description, List<Product> products) {
+	public ProductStatus(int id, String description) {
 		super();
 		this.id = id;
 		this.description = description;
-		this.products = products;
+		//this.products = products;
 	}
 
 	public int getId() {
@@ -52,31 +52,31 @@ public class ProductStatus implements Serializable {
 		this.description = description;
 	}
 
-	public List<Product> getProducts() {
-		return this.products;
-	}
-
-	public void setProducts(List<Product> products) {
-		this.products = products;
-	}
-
-	public Product addProduct(Product product) {
-		getProducts().add(product);
-		product.setProductStatus(this);
-
-		return product;
-	}
-
-	public Product removeProduct(Product product) {
-		getProducts().remove(product);
-		product.setProductStatus(null);
-
-		return product;
-	}
+//	public List<Product> getProducts() {
+//		return this.products;
+//	}
+//
+//	public void setProducts(List<Product> products) {
+//		this.products = products;
+//	}
+//
+//	public Product addProduct(Product product) {
+//		getProducts().add(product);
+//		product.setProductStatus(this);
+//
+//		return product;
+//	}
+//
+//	public Product removeProduct(Product product) {
+//		getProducts().remove(product);
+//		product.setProductStatus(null);
+//
+//		return product;
+//	}
 
 	@Override
 	public String toString() {
-		return "ProductStatus [id=" + id + ", description=" + description + ", products=" + products + "]";
+		return "ProductStatus [id=" + id + ", description=" + description +"]";
 	}
 
 }
