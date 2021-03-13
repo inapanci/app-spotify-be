@@ -61,6 +61,7 @@ public class DashboardController {
 		dto.setCompletedOrders(orderRepo.findByOrderStatusDescription("completed").size());
 		dto.setProcessingOrders(orderRepo.findByOrderStatusDescription("processing").size());
 		dto.setReplacements(orderRepo.findByOrderStatusDescription("replacement").size());
+		dto.setAllOrders(orderRepo.findAll().size());
 		return dto;
 	}
 	
@@ -71,6 +72,7 @@ public class DashboardController {
 		dto.setOpenedTickets(ticketRepo.findByTicketStatusDescription("opened").size());
 		dto.setPendingTickets(ticketRepo.findByTicketStatusDescription("pending").size());
 		dto.setNewReplies(messageRepo.getNewReplies().size());
+		dto.setAllTickets(ticketRepo.findAll().size());
 		return dto;
 	}
 	

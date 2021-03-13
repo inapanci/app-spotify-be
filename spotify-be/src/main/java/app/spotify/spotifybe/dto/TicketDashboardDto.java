@@ -6,6 +6,7 @@ public class TicketDashboardDto {
 	private int pendingTickets;
 	private int newReplies;
 	private int closedTickets;
+	private int allTickets;
 	
 	public TicketDashboardDto() {
 		super();
@@ -42,6 +43,14 @@ public class TicketDashboardDto {
 
 	public void setClosedTickets(int closedTickets) {
 		this.closedTickets = closedTickets;
+	}
+
+	public int getAllTickets() {
+		return allTickets;
+	}
+
+	public void setAllTickets(int allTickets) {
+		this.allTickets = allTickets;
 	}
 	
 }

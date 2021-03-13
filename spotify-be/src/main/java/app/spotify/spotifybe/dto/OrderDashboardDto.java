@@ -3,6 +3,7 @@ package app.spotify.spotifybe.dto;
 public class OrderDashboardDto {
 	
 	private int completedOrders;
+	private int allOrders;
 	private int processingOrders;
 	private int replacements;
 	private int canceledOrders;
@@ -34,6 +35,12 @@ public class OrderDashboardDto {
 	}
 	public void setCanceledOrders(int canceledOrders) {
 		this.canceledOrders = canceledOrders;
+	}
+	public int getAllOrders() {
+		return allOrders;
+	}
+	public void setAllOrders(int allOrders) {
+		this.allOrders = allOrders;
 	}
 	
 }
