@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import app.spotify.spotifybe.dto.ProductAccountsDto;
+import app.spotify.spotifybe.model.Account;
 import app.spotify.spotifybe.model.Product;
 import app.spotify.spotifybe.repository.AccountRepository;
 import app.spotify.spotifybe.repository.ProductRepository;
@@ -32,6 +33,10 @@ public class ProductController {
 	
 	@Autowired
 	AccountRepository accountRepo;
+	
+	@Autowired
+	AccountController accountController;
+	
 	
 	@GetMapping("/product/getAll")
 	public List<Product> getAllProducts(){
@@ -58,7 +63,7 @@ public class ProductController {
 			dto.setSort(p.getSort());
 			dto.setTitle(p.getTitle());
 			dto.setWarranty(p.getWarranty());
-			nrOfAcc = accountRepo.findByProductId(p.getId());
+			nrOfAcc = accountRepo.findByProductId(p.getId()).size();
 			dto.setNrOfAccounts(nrOfAcc);
 			prodAccounts.add(dto);
 		}
@@ -66,22 +71,17 @@ public class ProductController {
 	}
 	
 	@PostMapping("/product/addProduct")
-	public Product addNewProduct(@RequestParam("productInfo") String productInfo,  @RequestParam("file") MultipartFile file) throws IOException {
+	public Product addNewProduct(@RequestParam("productInfo") String productInfo,  @RequestParam("productImage") MultipartFile file, @RequestParam("accounts") MultipartFile accountsFile) throws IOException {
 		Product product = new ObjectMapper().readValue(productInfo, Product.class);
-//		product.setTitle(p.getTitle());
-//		product.setMaximum(p.getMaximum());
-//		product.setMinimum(p.getMinimum());
-//		product.setCreatedAt(java.sql.Timestamp.valueOf(LocalDateTime.now()));
-//		product.setGate(p.getGate());
-//		product.setDescription(p.getDescription());
-//		product.setFormat(p.getFormat());
-//		product.setPrice(p.getPrice());
-//		product.setProductStatus(p.getProductStatus());
-//		product.setSort(p.getSort());
-//		product.setDeliveryTime(p.getDeliveryTime());
-//		product.setWarranty(p.getWarranty());
 		product.setProductImage(file.getBytes());
 		productRepo.save(product);
+		
+		List<Account> accounts = accountController.uploadAccounts(accountsFile);
+		for(Account a : accounts) {
+			a.setProduct(product);
+			accountRepo.save(a);
+		}
+		
 		return product;
 	}
 	
