@@ -53,7 +53,8 @@ public class UserController {
 		dto.setLastSignIn(user.getLastSignIn());
 		dto.setSignUpDate(user.getSignUpDate());
 		dto.setTotalOrders(orderRepo.findByUserId(uuid).size());
-		dto.setTotalTickets(ticketRepo.findByUserId(uuid).size());		
+		dto.setTotalTickets(ticketRepo.findByUserId(uuid).size());	
+		dto.setStaffOnline(userRepo.getOnlineStaff());
 		return dto;
 	}
 	

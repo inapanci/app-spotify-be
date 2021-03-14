@@ -14,4 +14,7 @@ public interface MessageRepository extends JpaRepository<Message,Long> {
 	@Query("Select m From Message m Where m.read = 0")
 	List<Message> getNewReplies();
 
+	@Query("Select m From Message m Where m.read = 0 and m.user.id=?1")
+	List<Message> getNewRepliesOfUser(String uuid);
+
 }

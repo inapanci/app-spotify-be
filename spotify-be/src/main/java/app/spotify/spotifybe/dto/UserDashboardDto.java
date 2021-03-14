@@ -11,6 +11,7 @@ public class UserDashboardDto {
 	private Date lastSignIn;
 	private Date signUpDate;
 	private double balance;
+	private int staffOnline;
 	
 	public UserDashboardDto() {
 		super();
@@ -57,6 +58,12 @@ public class UserDashboardDto {
 	}
 	public void setBalance(double balance) {
 		this.balance = balance;
+	}
+	public int getStaffOnline() {
+		return staffOnline;
+	}
+	public void setStaffOnline(int staffOnline) {
+		this.staffOnline = staffOnline;
 	}
 
 }

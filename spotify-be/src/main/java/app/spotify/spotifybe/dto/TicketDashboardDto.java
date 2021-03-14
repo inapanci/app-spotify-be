@@ -3,10 +3,15 @@ package app.spotify.spotifybe.dto;
 public class TicketDashboardDto {
 	
 	private int openedTickets;
+	private int openedOfUsers;
 	private int pendingTickets;
+	private int pendingOfUsers;
 	private int newReplies;
+	private int newRepliesOfUsers;
 	private int closedTickets;
+	private int closedOfUsers;
 	private int allTickets;
+	private int allTicketsOfUser;
 	
 	public TicketDashboardDto() {
 		super();
@@ -51,6 +56,46 @@ public class TicketDashboardDto {
 
 	public void setAllTickets(int allTickets) {
 		this.allTickets = allTickets;
+	}
+
+	public int getOpenedOfUsers() {
+		return openedOfUsers;
+	}
+
+	public void setOpenedOfUsers(int openedOfUsers) {
+		this.openedOfUsers = openedOfUsers;
+	}
+
+	public int getPendingOfUsers() {
+		return pendingOfUsers;
+	}
+
+	public void setPendingOfUsers(int pendingOfUsers) {
+		this.pendingOfUsers = pendingOfUsers;
+	}
+
+	public int getNewRepliesOfUsers() {
+		return newRepliesOfUsers;
+	}
+
+	public void setNewRepliesOfUsers(int newRepliesOfUsers) {
+		this.newRepliesOfUsers = newRepliesOfUsers;
+	}
+
+	public int getClosedOfUsers() {
+		return closedOfUsers;
+	}
+
+	public void setClosedOfUsers(int closedOfUsers) {
+		this.closedOfUsers = closedOfUsers;
+	}
+
+	public int getAllTicketsOfUser() {
+		return allTicketsOfUser;
+	}
+
+	public void setAllTicketsOfUser(int allTicketsOfUser) {
+		this.allTicketsOfUser = allTicketsOfUser;
 	}
 	
 }

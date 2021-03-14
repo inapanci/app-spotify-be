@@ -48,6 +48,7 @@ public class OrderController {
 			dto.setUserEmail(o.getUser().getEmail());
 			dto.setUserName(o.getUser().getUsername());
 			dto.setValue(o.getValue());
+			dto.setOrderStatus(o.getOrderStatus().getDescription());
 			orderUserProd.add(dto);
 		}
 		return orderUserProd;

@@ -15,6 +15,7 @@ public class OrderUserProdDto {
 	private User user;
 	private String userName;
 	private String userEmail;
+	private String orderStatus;
 	
 	public OrderUserProdDto() {
 		super();
@@ -67,6 +68,12 @@ public class OrderUserProdDto {
 	}
 	public void setUserEmail(String userEmail) {
 		this.userEmail = userEmail;
+	}
+	public String getOrderStatus() {
+		return orderStatus;
+	}
+	public void setOrderStatus(String orderStatus) {
+		this.orderStatus = orderStatus;
 	}
 
 }

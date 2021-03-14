@@ -3,10 +3,15 @@ package app.spotify.spotifybe.dto;
 public class OrderDashboardDto {
 	
 	private int completedOrders;
+	private int completedOfUsers;
 	private int allOrders;
+	private int allOfUsers;
 	private int processingOrders;
+	private int processingOfUsers;
 	private int replacements;
+	private int replacementsOfUsers;
 	private int canceledOrders;
+	private int canceledOfUsers;
 	
 	public OrderDashboardDto() {
 		super();
@@ -42,5 +47,36 @@ public class OrderDashboardDto {
 	public void setAllOrders(int allOrders) {
 		this.allOrders = allOrders;
 	}
+	public int getAllOfUsers() {
+		return allOfUsers;
+	}
+	public void setAllOfUsers(int allOfUsers) {
+		this.allOfUsers = allOfUsers;
+	}
+	public int getCompletedOfUsers() {
+		return completedOfUsers;
+	}
+	public void setCompletedOfUsers(int completedOfUsers) {
+		this.completedOfUsers = completedOfUsers;
+	}
+	public int getProcessingOfUsers() {
+		return processingOfUsers;
+	}
+	public void setProcessingOfUsers(int processingOfUsers) {
+		this.processingOfUsers = processingOfUsers;
+	}
+	public int getReplacementsOfUsers() {
+		return replacementsOfUsers;
+	}
+	public void setReplacementsOfUsers(int replacementsOfUsers) {
+		this.replacementsOfUsers = replacementsOfUsers;
+	}
+	public int getCanceledOfUsers() {
+		return canceledOfUsers;
+	}
+	public void setCanceledOfUsers(int canceledOfUsers) {
+		this.canceledOfUsers = canceledOfUsers;
+	}
+
 	
 }

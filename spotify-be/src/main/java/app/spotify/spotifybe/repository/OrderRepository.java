@@ -25,4 +25,6 @@ public interface OrderRepository extends JpaRepository<Order,Long>{
 
 	public List<Order> findByUserId(String uuid);
 
+	public List<Order> findByUserIdAndOrderStatusDescription(String uuid, String descr);
+
 }
