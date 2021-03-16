@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -71,7 +72,7 @@ public class ProductController {
 	}
 	
 	@PostMapping("/product/addProduct")
-	public Product addNewProduct(@RequestParam("productInfo") String productInfo,  @RequestParam("productImage") MultipartFile file, @RequestParam("accounts") MultipartFile accountsFile) throws IOException {
+	public Product addNewProduct(@RequestPart("productInfo") String productInfo,  @RequestPart("productImage") MultipartFile file, @RequestPart("accounts") MultipartFile accountsFile) throws IOException {
 		Product product = new ObjectMapper().readValue(productInfo, Product.class);
 		product.setProductImage(file.getBytes());
 		productRepo.save(product);
