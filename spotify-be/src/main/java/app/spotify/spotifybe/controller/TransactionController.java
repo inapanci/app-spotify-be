@@ -37,8 +37,9 @@ public class TransactionController {
 		return transactionRepo.findById(id);
 	}
 	
+	//method gets all transactions but needs only some information for user
 	@GetMapping("/transaction/getTransactionUser")
-	public List<TransactionUserDto> getAllTransactionUser(){
+	public List<TransactionUserDto> getAllTransactionUserInfo(){
 		List<Transaction> transactions = transactionRepo.findAll();
 		List<TransactionUserDto> transacUser = new ArrayList<>();
 		for(Transaction t : transactions) {
@@ -52,6 +53,25 @@ public class TransactionController {
 			dto.setPaymentMethod(t.getPaymentMethod().getDescription());
 			dto.setUsersUsername(t.getUser().getUsername());
 			dto.setUsersEmail(t.getUser().getEmail());
+			dto.setUser(t.getUser());
+			transacUser.add(dto);
+		}
+		return transacUser;
+	}
+	
+	@GetMapping("/transaction/usersTransactions")
+	public List<TransactionUserDto> getUsersTransactions(@RequestParam("uuid") String uuid){
+		List<Transaction> transactions = transactionRepo.findByUserId(uuid);
+		List<TransactionUserDto> transacUser = new ArrayList<>();
+		for(Transaction t : transactions) {
+			TransactionUserDto dto = new TransactionUserDto();
+			dto.setId(t.getId());
+			dto.setAmount(t.getAmount());
+			dto.setCreatedAt(t.getCreatedAt());
+			dto.setDescription(t.getDescription());
+			dto.setTransactionStatus(t.getTransactionStatus().getDescription());  //pyet si do vendoset initially
+			dto.setTransactionId(t.getTransactionId());
+			dto.setPaymentMethod(t.getPaymentMethod().getDescription());
 			dto.setUser(t.getUser());
 			transacUser.add(dto);
 		}

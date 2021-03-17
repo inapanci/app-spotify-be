@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -71,7 +72,7 @@ public class ProductController {
 		return prodAccounts;
 	}
 	
-	@PostMapping("/product/addProduct")
+	@PostMapping(value="/product/addProduct", consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE })
 	public Product addNewProduct(@RequestPart("productInfo") String productInfo,  @RequestPart("productImage") MultipartFile file, @RequestPart("accounts") MultipartFile accountsFile) throws IOException {
 		Product product = new ObjectMapper().readValue(productInfo, Product.class);
 		product.setProductImage(file.getBytes());
