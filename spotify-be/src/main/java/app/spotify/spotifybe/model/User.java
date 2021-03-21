@@ -43,10 +43,10 @@ public class User implements Serializable {
 	private Date signUpDate;
 
 	// bi-directional many-to-many association to Account
-	@ManyToMany
-	@JoinTable(name = "account_buyers", joinColumns = { @JoinColumn(name = "buyer_uuid") }, inverseJoinColumns = {
-			@JoinColumn(name = "account_id") })
-	private List<Account> accounts;
+//	@ManyToMany
+//	@JoinTable(name = "account_buyers", joinColumns = { @JoinColumn(name = "buyer_uuid") }, inverseJoinColumns = {
+//			@JoinColumn(name = "account_id") })
+//	private List<Account> accounts;
 
 //	// bi-directional many-to-one association to Announcement
 //	@OneToMany(mappedBy = "user")
@@ -95,7 +95,7 @@ public class User implements Serializable {
 	}
 
 	public User(String id, String username, BigDecimal balance, String email, Date lastSignIn, String notifications,
-			String password, String role, Date signUpDate, List<Account> accounts, //List<Announcement> announcements,
+			String password, String role, Date signUpDate, //List<Account> accounts, //List<Announcement> announcements,
 			//List<CustomProductPrice> customProductPrices, //List<Order> orders,
 			//List<Staff> staffs, //List<Ticket> tickets, //List<Transaction> transactions,, List<Message> messages, 
 			List<UserPromotion> userPromotions, UserStatus userStatus, List<PaymentMethod> paymentMethods) {
@@ -109,7 +109,7 @@ public class User implements Serializable {
 		this.password = password;
 		this.role = role;
 		this.signUpDate = signUpDate;
-		this.accounts = accounts;
+		//this.accounts = accounts;
 		//this.announcements = announcements;
 		//this.customProductPrices = customProductPrices;
 		//this.messages = messages;
@@ -192,14 +192,6 @@ public class User implements Serializable {
 
 	public void setSignUpDate(Date signUpDate) {
 		this.signUpDate = signUpDate;
-	}
-
-	public List<Account> getAccounts() {
-		return accounts;
-	}
-
-	public void setAccounts(List<Account> accounts) {
-		this.accounts = accounts;
 	}
 
 //	public List<Announcement> getAnnouncements() {
@@ -290,7 +282,7 @@ public class User implements Serializable {
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", balance=" + balance + ", email=" + email
 				+ ", lastSignIn=" + lastSignIn + ", notifications=" + notifications + ", password=" + password
-				+ ", role=" + role + ", signUpDate=" + signUpDate + ", accounts=" + accounts + ", userPromotions=" + userPromotions + ", userStatus="
+				+ ", role=" + role + ", signUpDate=" + signUpDate + ", userPromotions=" + userPromotions + ", userStatus="
 				+ userStatus + ", paymentMethods=" + paymentMethods + "]";
 	}
 
