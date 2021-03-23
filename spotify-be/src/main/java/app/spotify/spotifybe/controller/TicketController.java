@@ -78,7 +78,13 @@ public class TicketController {
 			dto.setTitle(t.getTitle());
 			dto.setUpdatedAt(t.getUpdatedAt());
 			dto.setUser(t.getUser());
-			dto.setUserName(t.getUser().getUsername());
+			if(t.getUser().getRole().equals("admin")) {
+				dto.setUserName("admin");
+			}
+			else {
+				dto.setUserName(t.getUser().getUsername());
+			}
+			
 			ticketUser.add(dto);
 		}
 		return ticketUser;

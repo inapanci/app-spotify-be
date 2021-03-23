@@ -13,10 +13,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import app.spotify.spotifybe.dto.AccountProductDto;
 import app.spotify.spotifybe.dto.OrderUserProdDto;
 import app.spotify.spotifybe.model.Order;
+import app.spotify.spotifybe.model.Product;
+import app.spotify.spotifybe.repository.AccountRepository;
 import app.spotify.spotifybe.repository.OrderRepository;
 import app.spotify.spotifybe.repository.OrderStatusRepository;
+import app.spotify.spotifybe.repository.ProductRepository;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -28,6 +32,7 @@ public class OrderController {
 	
 	@Autowired
 	OrderStatusRepository oStatusRepo;
+
 	
 	@GetMapping("/order/getAll")
 	public List<Order> getAllOrders(){
@@ -74,4 +79,5 @@ public class OrderController {
 		return o;
 		
 	}
+	
 }

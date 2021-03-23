@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,6 +36,12 @@ public class AnnouncementController {
 		an.setUser(a.getUser());
 		announcementRepo.save(an);
 		return an;
+	}
+	
+	@DeleteMapping("/announcement/deleteAnnouncement")
+	public void deleteAnnouncement(@RequestBody Announcement a) {
+		Announcement an = announcementRepo.findById(a.getId()).orElseThrow(()-> new RuntimeException("announcement not found."));
+		announcementRepo.delete(an);
 	}
 
 }
