@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import app.spotify.spotifybe.dto.TransactionUserDto;
 import app.spotify.spotifybe.model.Transaction;
+import app.spotify.spotifybe.repository.PaymentMethodRepository;
 import app.spotify.spotifybe.repository.TransactionRepository;
+import app.spotify.spotifybe.repository.UserRepository;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -25,6 +27,9 @@ public class TransactionController {
 	
 	@Autowired
 	TransactionRepository transactionRepo;
+	
+	@Autowired
+	PaymentMethodRepository paymentMethodsRepo;
 	
 	@GetMapping("/transaction/getAll")
 	public List<Transaction> getAllTransactions(){
@@ -73,6 +78,7 @@ public class TransactionController {
 			dto.setTransactionId(t.getTransactionId());
 			dto.setPaymentMethod(t.getPaymentMethod().getDescription());
 			dto.setUser(t.getUser());
+			dto.setUsersPaymentMethods(paymentMethodsRepo.getUsersPaymentMethods(uuid));
 			transacUser.add(dto);
 		}
 		return transacUser;
