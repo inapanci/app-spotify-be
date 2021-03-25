@@ -76,12 +76,18 @@ public class ProductController {
 	@GetMapping("/order/getAccountProductInfo")
 	public AccountProductDto getAccountProductInfo(@RequestBody Product product) {
 		AccountProductDto dto = new AccountProductDto();
-		List<String> subTypes = new ArrayList<>();
-		for(String s: accountRepo.findDistinctSubscriptions()) {
-			String finalS = s.trim();
-			subTypes.add(finalS);
+		List<String> subTypes = accountRepo.findDistinctSubscriptions();
+
+		List<String> finalReturn = new ArrayList<>();
+		for(String s: subTypes) {
+			String finalS = s;
+			if(s.charAt(0) == ' ' || s.charAt(s.length() -1) == ' ') {
+				finalS = s.trim();
+			}
+			if(finalReturn.contains(finalS)) continue;
+			finalReturn.add(s);
 		}
-		dto.setSubscriptionTypes(subTypes);
+		dto.setSubscriptionTypes(finalReturn);
 		dto.setCountries(accountRepo.findDistinctCountries());
 		dto.setFormats(productRepo.findAllFormat());
 		dto.setProduct(product);
