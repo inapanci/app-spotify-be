@@ -73,7 +73,13 @@ public class ProductController {
 		return prodAccounts;
 	}
 	
-	@GetMapping("/order/getAccountProductInfo")
+	@GetMapping("/product/getById")
+	public Product getProductById(@RequestParam("prodId") int prodId) {
+		Product p = productRepo.findById(prodId).orElseThrow(()-> new RuntimeException("product not found."));
+		return p;
+	}
+	
+	@GetMapping("/product/getAccountProductInfo")
 	public AccountProductDto getAccountProductInfo(@RequestBody Product product) {
 		AccountProductDto dto = new AccountProductDto();
 		List<String> subTypes = accountRepo.findDistinctSubscriptions();
