@@ -80,10 +80,11 @@ public class ProductController {
 	}
 	
 	@GetMapping("/product/getAccountProductInfo")
-	public AccountProductDto getAccountProductInfo(@RequestBody Product product) {
+	public AccountProductDto getAccountProductInfo(@RequestParam("prodId") int prodId) {
 		AccountProductDto dto = new AccountProductDto();
 		List<String> subTypes = accountRepo.findDistinctSubscriptions();
-
+		Product p = productRepo.findById(prodId).orElseThrow(()-> new RuntimeException("product not found."));
+		
 		List<String> finalReturn = new ArrayList<>();
 		for(String s: subTypes) {
 			String finalS = s;
@@ -96,8 +97,8 @@ public class ProductController {
 		dto.setSubscriptionTypes(finalReturn);
 		dto.setCountries(accountRepo.findDistinctCountries());
 		dto.setFormats(productRepo.findAllFormat());
-		dto.setProduct(product);
-		dto.setStock(accountRepo.findByProductId(product.getId()).size());
+		dto.setProduct(p);
+		dto.setStock(accountRepo.findByProductId(p.getId()).size());
 		return dto;
 	}
 
