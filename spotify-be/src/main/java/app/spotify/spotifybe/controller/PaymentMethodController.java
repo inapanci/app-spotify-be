@@ -1,5 +1,6 @@
 package app.spotify.spotifybe.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,20 +35,18 @@ public class PaymentMethodController {
 	}
 	
 	@PutMapping("/paymentMethod/updateSettings")
-	public PaymentMethod updatePmSettings(@RequestBody PaymentMethod pm) throws NotManagedException {
-		PaymentMethod pMeth = paymentMethRepo.findById(pm.getId()).orElseThrow(()-> new RuntimeException("payment method not found"));
+	public List<PaymentMethod> updatePmSettings(@RequestBody PaymentMethod[] pm) throws NotManagedException {
+		List<PaymentMethod> list = new ArrayList<>(); //= paymentMethRepo.findById(pm.getId()).orElseThrow(()-> new RuntimeException("payment method not found"));
+
 		try {
-			pMeth.setDescription(pm.getDescription());
-			pMeth.setDetails(pm.getDetails());
-			pMeth.setMaximum(pm.getMaximum());
-			pMeth.setMinimum(pm.getMinimum());
-			pMeth.setStatus(pm.getStatus());
-			pMeth.setStatusNewUsers(pm.getStatusNewUsers());
-			paymentMethRepo.save(pMeth);
+			for(PaymentMethod p : pm) {
+				paymentMethRepo.save(p);
+				list.add(p);
+			}
 		} catch (Exception e) {
 			throw new NotManagedException("Something went wrong. Settings were not saved.");
 		}
 		
-		return pMeth;
+		return list;
 	}
 }
