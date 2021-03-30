@@ -53,6 +53,9 @@ public class Product implements Serializable {
 	private String title;
 
 	private String warranty;
+	
+	@Column(name="price_per_column")
+	private BigDecimal pricePerFilter;
 
 //	//bi-directional many-to-one association to Account
 //	@OneToMany(mappedBy="product")
@@ -75,7 +78,7 @@ public class Product implements Serializable {
 	}
 
 	public Product(int id, Date createdAt, Date deliveryTime, String description, String format, int gate, int maximum,
-			int minimum, BigDecimal price, byte[] productImage, int sort, String title, String warranty,
+			int minimum, BigDecimal price, byte[] productImage, int sort, String title, String warranty, BigDecimal pricePerFilter,
 			 List<CustomProductPrice> customProductPrices //List<Order> orders, List<Account> accounts, ProductStatus productStatus
 			 ) {
 		super();
@@ -92,10 +95,11 @@ public class Product implements Serializable {
 		this.sort = sort;
 		this.title = title;
 		this.warranty = warranty;
+		this.pricePerFilter = pricePerFilter;
 		//this.accounts = accounts;
-	//	this.customProductPrices = customProductPrices;
+		//this.customProductPrices = customProductPrices;
 		//this.orders = orders;
-		this.productStatus = productStatus;
+		//this.productStatus = productStatus;
 	}
 
 	public int getId() {
@@ -201,6 +205,7 @@ public class Product implements Serializable {
 	public void setWarranty(String warranty) {
 		this.warranty = warranty;
 	}
+	
 
 //	public List<Account> getAccounts() {
 //		return this.accounts;
@@ -268,12 +273,16 @@ public class Product implements Serializable {
 //		return order;
 //	}
 
-	public ProductStatus getProductStatus() {
-		return this.productStatus;
+	public BigDecimal getPricePerFilter() {
+		return pricePerFilter;
 	}
 
-	public void setProductStatus(ProductStatus productStatus) {
-		this.productStatus = productStatus;
+	public void setPricePerFilter(BigDecimal pricePerFilter) {
+		this.pricePerFilter = pricePerFilter;
+	}
+
+	public ProductStatus getProductStatus() {
+		return this.productStatus;
 	}
 
 	@Override
@@ -281,7 +290,12 @@ public class Product implements Serializable {
 		return "Product [id=" + id + ", createdAt=" + createdAt + ", deliveryTime=" + deliveryTime + ", description="
 				+ description + ", format=" + format + ", gate=" + gate + ", maximum=" + maximum + ", minimum="
 				+ minimum + ", price=" + price + ", productImage=" + Arrays.toString(productImage) + ", sort=" + sort
-				+ ", title=" + title + ", warranty=" + warranty + ", productStatus=" + productStatus + "]";
+				+ ", title=" + title + ", warranty=" + warranty + ", pricePerFilter=" + pricePerFilter
+				+ ", productStatus=" + productStatus + "]";
+	}
+
+	public void setProductStatus(ProductStatus productStatus) {
+		this.productStatus = productStatus;
 	}
 
 }
