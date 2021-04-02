@@ -1,24 +1,16 @@
 package app.spotify.spotifybe.controller;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import app.spotify.spotifybe.dto.UserDashboardDto;
 import app.spotify.spotifybe.model.User;
 import app.spotify.spotifybe.repository.OrderRepository;
 import app.spotify.spotifybe.repository.TicketRepository;
 import app.spotify.spotifybe.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -43,6 +35,7 @@ public class UserController {
 	public User getById(@RequestParam("userId") String uuid) {
 		return userRepo.findById(uuid).orElseThrow(()->new RuntimeException("user not found"));
 	}
+
 	
 	@GetMapping("/user/userDetails")
 	public UserDashboardDto getUserDetails(@RequestParam("userId") String uuid) {
