@@ -1,6 +1,7 @@
 package app.spotify.spotifybe.controller;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
@@ -10,6 +11,11 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -102,21 +108,38 @@ public class OrderController {
 	}
 	
 	@GetMapping("/order/downloadOrderAccounts")
-	public List<Account> downloadOrderAccounts(@RequestParam("orderId")long orderId, HttpServletResponse response) throws Exception{
+	public ResponseEntity<Resource> downloadOrderAccounts(@RequestParam("orderId")long orderId, HttpServletResponse response) throws Exception{
 		List<Account> accounts = accountRepo.getAllAccountsOfOrder(orderId);
 		if(accounts.isEmpty()) {
 			throw new Exception("No accounts were found for order:"+ orderId);
 		}
-		File file = new File("accounts"+orderId+".txt");
+		File file = new File("files/accounts"+orderId+".txt"); //new File("/some/absolute/path/myfile.txt");
 		FileWriter fw = new FileWriter(file);
 		PrintWriter pw = new PrintWriter(fw);
 		
 		for(Account a : accounts) {
-			pw.println(a.toString());
+			String newline = "";
+			newline += a.getCredentials() != null ? a.getCredentials() + " | " : "";
+			newline += a.getSubscriptionType() != null ? a.getSubscriptionType() + " | " : "";
+			newline += a.getCountry() != null ? a.getCountry() + " | " : "";
+			newline += a.getInvites() != null ? a.getInvites() + " | " : "";
+			newline += a.getAddress() != null ? a.getAddress() + " | " : "";
+			newline += a.getInviteToken() != null ? a.getInviteToken() + " | " : "";
+			newline += a.getExpire() != null ? a.getExpire() + " | " : "";
+			newline += a.getExtra() != null ? a.getExtra() + " | " : "";
+			
+			pw.println(newline);
 		}
 		pw.close();
 		
-		return accounts;
+		FileSystemResource resource = new FileSystemResource("files/accounts"+orderId+".txt");
+		if (!resource.exists()) {
+			throw new FileNotFoundException("File non trovato.");
+		}
+		
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+				.contentType(MediaType.APPLICATION_OCTET_STREAM).body(resource);
 		
 	}	
 	@PostMapping("/order/addNew")
