@@ -1,8 +1,13 @@
 package app.spotify.spotifybe.controller;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import app.spotify.spotifybe.dto.AccountProductDto;
 import app.spotify.spotifybe.dto.OrderUserProdDto;
 import app.spotify.spotifybe.exception.BalanceNotEnoughException;
+import app.spotify.spotifybe.model.Account;
 import app.spotify.spotifybe.model.Order;
 import app.spotify.spotifybe.model.Product;
 import app.spotify.spotifybe.model.User;
@@ -38,6 +44,9 @@ public class OrderController {
 	
 	@Autowired
 	UserRepository userRepo;
+	
+	@Autowired
+	AccountRepository accountRepo;
 
 	
 	@GetMapping("/order/getAll")
@@ -71,13 +80,45 @@ public class OrderController {
 	}
 	
 	@GetMapping("/order/getAllOfUser")
-	public List<Order> getAllOrdersOfUser(@RequestParam(name="uuid") String uuid){
+	public List<OrderUserProdDto> getAllOrdersOfUser(@RequestParam(name="uuid") String uuid){
 		User user = userRepo.findById(uuid).orElseThrow(()->new RuntimeException("user not found"));
 		List<Order> orders = orderRepo.findByUserId(user.getId());
-		return orders;
+		List<OrderUserProdDto> orderUserProd = new ArrayList<>();
+		for(Order o : orders) {
+			OrderUserProdDto dto = new OrderUserProdDto();
+			dto.setId(o.getId());
+			dto.setOrderDate(o.getOrderDate());
+			dto.setProductName(o.getProduct().getDescription());
+			dto.setQuantity(o.getQuantity());
+			dto.setUser(o.getUser());
+			dto.setUserEmail(o.getUser().getEmail());
+			dto.setUserName(o.getUser().getUsername());
+			dto.setValue(o.getValue());
+			dto.setOrderStatus(o.getOrderStatus().getDescription());
+			orderUserProd.add(dto);
+		}
+		return orderUserProd;
 		
 	}
 	
+	@GetMapping("/order/downloadOrderAccounts")
+	public List<Account> downloadOrderAccounts(@RequestParam("orderId")long orderId, HttpServletResponse response) throws Exception{
+		List<Account> accounts = accountRepo.getAllAccountsOfOrder(orderId);
+		if(accounts.isEmpty()) {
+			throw new Exception("No accounts were found for order:"+ orderId);
+		}
+		File file = new File("accounts"+orderId+".txt");
+		FileWriter fw = new FileWriter(file);
+		PrintWriter pw = new PrintWriter(fw);
+		
+		for(Account a : accounts) {
+			pw.println(a.toString());
+		}
+		pw.close();
+		
+		return accounts;
+		
+	}	
 	@PostMapping("/order/addNew")
 	public Order addNewOrder(@RequestBody Order order) throws BalanceNotEnoughException {
 		Order o = new Order();
