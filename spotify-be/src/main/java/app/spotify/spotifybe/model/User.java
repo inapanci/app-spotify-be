@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * The persistent class for the users database table.
@@ -17,9 +18,9 @@ import java.util.List;
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
+    @Id
 	@Column(name = "uuid", nullable = false)
-	private String id;
+	private String id = UUID.randomUUID().toString();
 
 	private String username;
 

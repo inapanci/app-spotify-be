@@ -5,6 +5,8 @@ import app.spotify.spotifybe.model.User;
 import app.spotify.spotifybe.repository.OrderRepository;
 import app.spotify.spotifybe.repository.TicketRepository;
 import app.spotify.spotifybe.repository.UserRepository;
+import app.spotify.spotifybe.repository.UserStatusRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +27,9 @@ public class UserController {
 	
 	@Autowired
 	TicketRepository ticketRepo;
+	
+	@Autowired
+	UserStatusRepository userStatusRepo;
 	
 	@GetMapping("/user/getAll")
 	public List<User> getAllUsers(){
@@ -65,19 +70,21 @@ public class UserController {
 		
 	}
 	
-	@PostMapping("/user/addNew")
-	public User addNewUser(@RequestBody User usr) {
+	@PostMapping("/register")
+	public User addNewUser(@RequestBody User usr) throws Exception  {
 		User u = new User();
+		if (userRepo.findByEmail(usr.getEmail()) != null) {
+			throw new Exception("user already exists");
+		}
 		u.setId(usr.getId());
 		u.setUsername(usr.getUsername());
 		u.setEmail(usr.getEmail());
 		u.setPassword(usr.getPassword());
-		u.setRole(usr.getRole());
+		u.setRole("user");
 		u.setBalance(BigDecimal.valueOf(0.0));
-		u.setLastSignIn(java.sql.Timestamp.valueOf(LocalDateTime.now()));
 		u.setNotifications(usr.getNotifications());
 		u.setSignUpDate(java.sql.Timestamp.valueOf(LocalDateTime.now()));
-		u.setUserStatus(usr.getUserStatus());
+		u.setUserStatus(userStatusRepo.findById(1).get());
 		userRepo.save(u);
 		return u; 
 	}

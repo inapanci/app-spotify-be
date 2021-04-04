@@ -14,4 +14,6 @@ public interface UserRepository extends JpaRepository<User,String>{
 	@Query("Select count(u) from User u where u.id in (Select s.user.id from Staff s where s.online='1')")
 	public int getOnlineStaff();
 
+	public User findByEmail(String email);
+
 }
