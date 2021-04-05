@@ -20,7 +20,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String route = request.getRequestURL().toString();
 
-        if (route.contains("spotify/login") || route.contains("spotify/register")) {
+        if (route.contains("spotify/login") || route.contains("spotify/register") || route.contains("spotify/account/getAllSold")) {
             return true;
         }
         if (request.getHeader("authorization-uuid") == null || request.getHeader("authorization-uuid").equals("")) {
@@ -29,6 +29,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         }
 
         return userRepository.existsById(request.getHeader("authorization-uuid"));
+
     }
 
     public void postHandle(
