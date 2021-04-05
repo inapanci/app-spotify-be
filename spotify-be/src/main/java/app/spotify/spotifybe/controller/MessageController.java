@@ -37,6 +37,11 @@ public class MessageController {
 	public Message getMessageById(@RequestParam("messageId") long mId) {
 		return messageRepo.findById(mId).orElseThrow(() -> new RuntimeException("Cannot find this message."));
 	}
+	
+	@GetMapping("/message/getByTicket")
+	public List<Message> getMessageByTicket(@RequestParam("ticketId") int ticketId) {
+		return messageRepo.findByTicketId(ticketId);
+	}
 
 	@PostMapping("/message/addNew")
 	public Message addNewMessage(@RequestBody Message msg) {

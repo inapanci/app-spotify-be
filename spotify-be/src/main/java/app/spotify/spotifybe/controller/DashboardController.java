@@ -53,7 +53,7 @@ public class DashboardController {
 		dash.setNrOfUsers(userRepo.findAll().size());
 		dash.setNrOfClients(orderRepo.findClients());
 		dash.setClientBalance(userRepo.getAllBalance());
-		dash.setConversionRate((dash.getNrOfClients()/dash.getRevenue())*100);
+		dash.setConversionRate((dash.getRevenue()/dash.getNrOfClients())*100);
 		return dash;
 	}
 	

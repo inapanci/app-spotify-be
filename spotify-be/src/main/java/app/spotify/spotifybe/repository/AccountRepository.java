@@ -14,4 +14,10 @@ public interface AccountRepository extends JpaRepository<Account, Long>{
 	
 	public List<Account> findByProductId(int productId);
 
+	@Query("Select distinct(a.country) From Account a where a.country is not null")
+	public List<String> findDistinctCountries();
+
+	@Query("Select distinct(a.subscriptionType) from Account a where a.subscriptionType is not null")
+	public List<String> findDistinctSubscriptions();
+
 }

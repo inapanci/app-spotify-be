@@ -2,6 +2,7 @@ package app.spotify.spotifybe.dto;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import app.spotify.spotifybe.model.PaymentMethod;
 import app.spotify.spotifybe.model.TransactionStatus;
@@ -19,6 +20,7 @@ public class TransactionUserDto {
 	private String usersUsername;
 	private String usersEmail;
 	private User user;
+	private List<PaymentMethod> usersPaymentMethods;
 	
 	
 	public TransactionUserDto() {
@@ -84,6 +86,12 @@ public class TransactionUserDto {
 	}
 	public void setUser(User user) {
 		this.user = user;
+	}
+	public List<PaymentMethod> getUsersPaymentMethods() {
+		return usersPaymentMethods;
+	}
+	public void setUsersPaymentMethods(List<PaymentMethod> usersPaymentMethods) {
+		this.usersPaymentMethods = usersPaymentMethods;
 	}
 
 }

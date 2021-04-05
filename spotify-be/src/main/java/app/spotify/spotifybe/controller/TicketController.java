@@ -40,6 +40,24 @@ public class TicketController {
 	public List<Ticket> getTicketsOfUser(@RequestParam("userId") String uuid) {
 		return ticketRepo.findByUserId(uuid);
 	}
+	
+	@GetMapping("/ticket/getAllOfUserDto")
+	public List<TicketUserDto> getTicketUser(@RequestParam("userId") String uuid){
+		List<Ticket> tickets = ticketRepo.findByUserId(uuid);
+		List<TicketUserDto> ticketUser = new ArrayList<>();
+		for(Ticket t : tickets) {
+			TicketUserDto dto = new TicketUserDto();
+			dto.setId(t.getId());
+			dto.setCreatedAt(t.getCreatedAt());
+			dto.setNotes(t.getNotes());
+			dto.setStatus(t.getTicketStatus().getDescription());
+			dto.setTitle(t.getTitle());
+			dto.setUpdatedAt(t.getUpdatedAt());
+			dto.setUser(t.getUser());
+			ticketUser.add(dto);
+		}
+		return ticketUser;
+	}
 
 	@GetMapping("/ticket/getPendingOfUser")
 	public List<Ticket> getPendingTicketsOfUser(@RequestParam("userId") String uuid) {
@@ -60,7 +78,13 @@ public class TicketController {
 			dto.setTitle(t.getTitle());
 			dto.setUpdatedAt(t.getUpdatedAt());
 			dto.setUser(t.getUser());
-			dto.setUserName(t.getUser().getUsername());
+			if(t.getUser().getRole().equals("admin")) {
+				dto.setUserName("admin");
+			}
+			else {
+				dto.setUserName(t.getUser().getUsername());
+			}
+			
 			ticketUser.add(dto);
 		}
 		return ticketUser;

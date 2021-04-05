@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * The persistent class for the users database table.
@@ -17,9 +18,9 @@ import java.util.List;
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
+    @Id
 	@Column(name = "uuid", nullable = false)
-	private String id;
+	private String id = UUID.randomUUID().toString();
 
 	private String username;
 
@@ -43,10 +44,10 @@ public class User implements Serializable {
 	private Date signUpDate;
 
 	// bi-directional many-to-many association to Account
-	@ManyToMany
-	@JoinTable(name = "account_buyers", joinColumns = { @JoinColumn(name = "buyer_uuid") }, inverseJoinColumns = {
-			@JoinColumn(name = "account_id") })
-	private List<Account> accounts;
+//	@ManyToMany
+//	@JoinTable(name = "account_buyers", joinColumns = { @JoinColumn(name = "buyer_uuid") }, inverseJoinColumns = {
+//			@JoinColumn(name = "account_id") })
+//	private List<Account> accounts;
 
 //	// bi-directional many-to-one association to Announcement
 //	@OneToMany(mappedBy = "user")
@@ -76,9 +77,9 @@ public class User implements Serializable {
 //	@OneToMany(mappedBy = "user")
 //	private List<Transaction> transactions;
 
-	// bi-directional many-to-one association to UserPromotion
-	@OneToMany(mappedBy = "user")
-	private List<UserPromotion> userPromotions;
+//	// bi-directional many-to-one association to UserPromotion
+//	@OneToMany(mappedBy = "user")
+//	private List<UserPromotion> userPromotions;
 
 	// bi-directional many-to-one association to UserStatus
 	@ManyToOne
@@ -95,10 +96,10 @@ public class User implements Serializable {
 	}
 
 	public User(String id, String username, BigDecimal balance, String email, Date lastSignIn, String notifications,
-			String password, String role, Date signUpDate, List<Account> accounts, //List<Announcement> announcements,
+			String password, String role, Date signUpDate, //List<Account> accounts, //List<Announcement> announcements,
 			//List<CustomProductPrice> customProductPrices, //List<Order> orders,
-			//List<Staff> staffs, //List<Ticket> tickets, //List<Transaction> transactions,, List<Message> messages, 
-			List<UserPromotion> userPromotions, UserStatus userStatus, List<PaymentMethod> paymentMethods) {
+			//List<Staff> staffs, //List<Ticket> tickets, //List<Transaction> transactions,, List<Message> messages, List<UserPromotion> userPromotions
+			UserStatus userStatus, List<PaymentMethod> paymentMethods) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -109,7 +110,7 @@ public class User implements Serializable {
 		this.password = password;
 		this.role = role;
 		this.signUpDate = signUpDate;
-		this.accounts = accounts;
+		//this.accounts = accounts;
 		//this.announcements = announcements;
 		//this.customProductPrices = customProductPrices;
 		//this.messages = messages;
@@ -117,7 +118,7 @@ public class User implements Serializable {
 		//this.staffs = staffs;
 		//this.tickets = tickets;
 		//this.transactions = transactions;
-		this.userPromotions = userPromotions;
+		//this.userPromotions = userPromotions;
 		this.userStatus = userStatus;
 		this.paymentMethods = paymentMethods;
 	}
@@ -194,14 +195,6 @@ public class User implements Serializable {
 		this.signUpDate = signUpDate;
 	}
 
-	public List<Account> getAccounts() {
-		return accounts;
-	}
-
-	public void setAccounts(List<Account> accounts) {
-		this.accounts = accounts;
-	}
-
 //	public List<Announcement> getAnnouncements() {
 //		return announcements;
 //	}
@@ -257,14 +250,14 @@ public class User implements Serializable {
 //	public void setTransactions(List<Transaction> transactions) {
 //		this.transactions = transactions;
 //	}
-
-	public List<UserPromotion> getUserPromotions() {
-		return userPromotions;
-	}
-
-	public void setUserPromotions(List<UserPromotion> userPromotions) {
-		this.userPromotions = userPromotions;
-	}
+//
+//	public List<UserPromotion> getUserPromotions() {
+//		return userPromotions;
+//	}
+//
+//	public void setUserPromotions(List<UserPromotion> userPromotions) {
+//		this.userPromotions = userPromotions;
+//	}
 
 	public UserStatus getUserStatus() {
 		return userStatus;
@@ -290,7 +283,7 @@ public class User implements Serializable {
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", balance=" + balance + ", email=" + email
 				+ ", lastSignIn=" + lastSignIn + ", notifications=" + notifications + ", password=" + password
-				+ ", role=" + role + ", signUpDate=" + signUpDate + ", accounts=" + accounts + ", userPromotions=" + userPromotions + ", userStatus="
+				+ ", role=" + role + ", signUpDate=" + signUpDate + ", userStatus="
 				+ userStatus + ", paymentMethods=" + paymentMethods + "]";
 	}
 

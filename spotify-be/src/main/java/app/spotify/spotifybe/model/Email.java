@@ -18,16 +18,16 @@ public class Email implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	@Column(name="description", length=500)
-	private String description;
+	@Column(name="email", length=500)
+	private String email;
 
 	public Email() {
 	}
 
-	public Email(int id, String description) {
+	public Email(int id, String email) {
 		super();
 		this.id = id;
-		this.description = description;
+		this.email = email;
 	}
 
 	public int getId() {
@@ -38,16 +38,16 @@ public class Email implements Serializable {
 		this.id = id;
 	}
 
-	public String getDescription() {
-		return this.description;
+	public String getEmail() {
+		return this.email;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	@Override
 	public String toString() {
-		return "Email [id=" + id + ", description=" + description + "]";
+		return "Email [id=" + id + ", email=" + email + "]";
 	}
 }

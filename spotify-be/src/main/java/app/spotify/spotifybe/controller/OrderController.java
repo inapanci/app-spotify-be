@@ -13,10 +13,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import app.spotify.spotifybe.dto.AccountProductDto;
 import app.spotify.spotifybe.dto.OrderUserProdDto;
+import app.spotify.spotifybe.exception.BalanceNotEnoughException;
 import app.spotify.spotifybe.model.Order;
+import app.spotify.spotifybe.model.Product;
+import app.spotify.spotifybe.model.User;
+import app.spotify.spotifybe.repository.AccountRepository;
 import app.spotify.spotifybe.repository.OrderRepository;
 import app.spotify.spotifybe.repository.OrderStatusRepository;
+import app.spotify.spotifybe.repository.ProductRepository;
+import app.spotify.spotifybe.repository.UserRepository;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -28,6 +35,10 @@ public class OrderController {
 	
 	@Autowired
 	OrderStatusRepository oStatusRepo;
+	
+	@Autowired
+	UserRepository userRepo;
+
 	
 	@GetMapping("/order/getAll")
 	public List<Order> getAllOrders(){
@@ -59,8 +70,16 @@ public class OrderController {
 		return orderRepo.findById(orId).orElseThrow(() -> new RuntimeException("Cannot find this order."));
 	}
 	
+	@GetMapping("/order/getAllOfUser")
+	public List<Order> getAllOrdersOfUser(@RequestParam(name="uuid") String uuid){
+		User user = userRepo.findById(uuid).orElseThrow(()->new RuntimeException("user not found"));
+		List<Order> orders = orderRepo.findByUserId(user.getId());
+		return orders;
+		
+	}
+	
 	@PostMapping("/order/addNew")
-	public Order addNewOrder(@RequestBody Order order) {
+	public Order addNewOrder(@RequestBody Order order) throws BalanceNotEnoughException {
 		Order o = new Order();
 		o.setOrderDate(java.sql.Timestamp.valueOf(LocalDateTime.now()));
 		o.setOrderStatus(oStatusRepo.findByDescription("ready"));
@@ -70,8 +89,15 @@ public class OrderController {
 		o.setValue(order.getValue());
 		o.setFilters(order.getFilters());
 		
-		orderRepo.save(o);
+		if(order.getUser().getBalance().compareTo(order.getValue()) > 0) {
+			orderRepo.save(o);
+		}
+		else {
+			throw new BalanceNotEnoughException("You do not have enough balance to complete this order.");
+		}
+				
 		return o;
 		
 	}
+	
 }
