@@ -29,6 +29,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         }
 
         return userRepository.existsById(request.getHeader("authorization-uuid"));
+//    	return true;
 
     }
 

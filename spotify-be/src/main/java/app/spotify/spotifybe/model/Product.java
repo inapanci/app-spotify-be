@@ -54,7 +54,7 @@ public class Product implements Serializable {
 
 	private String warranty;
 	
-	@Column(name="price_per_column")
+	@Column(name="price_per_filter")
 	private BigDecimal pricePerFilter;
 
 //	//bi-directional many-to-one association to Account
