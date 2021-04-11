@@ -1,5 +1,6 @@
 package app.spotify.spotifybe.controller;
 
+import app.spotify.spotifybe.dto.LoginDto;
 import app.spotify.spotifybe.dto.UserDashboardDto;
 import app.spotify.spotifybe.model.User;
 import app.spotify.spotifybe.repository.OrderRepository;
@@ -8,7 +9,9 @@ import app.spotify.spotifybe.repository.UserRepository;
 import app.spotify.spotifybe.repository.UserStatusRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -30,6 +33,7 @@ public class UserController {
 	
 	@Autowired
 	UserStatusRepository userStatusRepo;
+	
 	
 	@GetMapping("/user/getAll")
 	public List<User> getAllUsers(){
@@ -71,10 +75,12 @@ public class UserController {
 	}
 	
 	@PostMapping("/register")
-	public User addNewUser(@RequestBody User usr) throws Exception  {
+	public HttpStatus addNewUser(@RequestBody User usr) throws Exception  {
 		User u = new User();
 		if (userRepo.findByEmail(usr.getEmail()) != null) {
-			throw new Exception("user already exists");
+			throw new ResponseStatusException(
+			          HttpStatus.BAD_REQUEST, "User already exists");
+			    
 		}
 		u.setId(usr.getId());
 		u.setUsername(usr.getUsername());
@@ -86,7 +92,29 @@ public class UserController {
 		u.setSignUpDate(java.sql.Timestamp.valueOf(LocalDateTime.now()));
 		u.setUserStatus(userStatusRepo.findById(1).get());
 		userRepo.save(u);
-		return u; 
+		return HttpStatus.OK; 
+	}
+	
+	@PostMapping("/login")
+	public LoginDto login (@RequestParam(required=true) String email, @RequestParam(required=true) String password) {
+
+
+		User user = userRepo.findByEmailAndPassword(email, password);
+		LoginDto loginData = new LoginDto();
+		
+		if (user != null) {
+			
+			loginData.setEmail(user.getEmail());
+			loginData.setRole(user.getRole());
+			loginData.setUsername(user.getUsername());
+			loginData.setToken(user.getId());
+		} else {
+			throw new ResponseStatusException(
+			          HttpStatus.BAD_REQUEST, "Wrong credentials");
+		}
+		
+		return loginData;
 	}
 
+	
 }
