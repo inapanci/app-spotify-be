@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import app.spotify.spotifybe.model.Account;
+import app.spotify.spotifybe.model.Product;
 
 public interface AccountRepository extends JpaRepository<Account, Long>{
 
@@ -22,5 +23,11 @@ public interface AccountRepository extends JpaRepository<Account, Long>{
 
 	@Query("SELECT a FROM Account a where a.product.id in (select o.product.id from Order o where o.id=?1)")
 	public List<Account> getAllAccountsOfOrder(long orderId);
+
+	public List<Account> findByCountryAndSubscriptionTypeAndProductId(String country, String subscription, Integer productId);
+
+	public List<Account> findByCountryAndProductId(String country, Integer productId);
+
+	public List<Account> findBySubscriptionTypeAndProductId(String subscription, Integer productId);
 
 }

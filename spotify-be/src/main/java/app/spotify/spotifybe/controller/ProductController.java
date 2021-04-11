@@ -23,8 +23,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import app.spotify.spotifybe.dto.AccountProductDto;
 import app.spotify.spotifybe.dto.ProductAccountsDto;
 import app.spotify.spotifybe.model.Account;
+import app.spotify.spotifybe.model.Filter;
 import app.spotify.spotifybe.model.Product;
 import app.spotify.spotifybe.repository.AccountRepository;
+import app.spotify.spotifybe.repository.FilterRepository;
 import app.spotify.spotifybe.repository.ProductRepository;
 
 @CrossOrigin(origins = "*")
@@ -40,6 +42,9 @@ public class ProductController {
 
 	@Autowired
 	AccountController accountController;
+	
+	@Autowired
+	FilterRepository filterRepo;
 
 	@GetMapping("/product/getAll")
 	public List<Product> getAllProducts() {
@@ -80,7 +85,7 @@ public class ProductController {
 	}
 	
 	@GetMapping("/product/getAccountProductInfo")
-	public AccountProductDto getAccountProductInfo(@RequestParam("prodId") int prodId) {
+	public AccountProductDto getAccountProductInfo(@RequestParam("prodId") int prodId, @RequestParam(name="filters", required=false) List<String> filterDetails) throws Exception {
 		AccountProductDto dto = new AccountProductDto();
 		List<String> subTypes = accountRepo.findDistinctSubscriptions();
 		Product p = productRepo.findById(prodId).orElseThrow(()-> new RuntimeException("product not found."));
@@ -98,7 +103,37 @@ public class ProductController {
 		dto.setCountries(accountRepo.findDistinctCountries());
 		dto.setFormats(productRepo.findAllFormat());
 		dto.setProduct(p);
-		dto.setStock(accountRepo.findByProductId(p.getId()).size());
+		
+		int stock=accountRepo.findByProductId(p.getId()).size();
+		if(filterDetails.isEmpty()) {
+			dto.setStock(stock);
+		}
+		else {
+			if (filterDetails.size()==filterRepo.findAll().size()) {
+				stock = accountRepo.findByCountryAndSubscriptionTypeAndProductId(filterDetails.get(0), filterDetails.get(1), p.getId()).size();
+				dto.setStock(stock);
+			}
+			else if (filterDetails.size()==1) {
+				 
+					switch (filterDetails.get(0)) {
+					case "country":
+						stock = accountRepo.findByCountryAndProductId(filterDetails.get(0), p.getId()).size();
+						dto.setStock(stock);
+						break;
+					case "subscription":
+						stock = accountRepo.findBySubscriptionTypeAndProductId(filterDetails.get(0), p.getId()).size();
+						dto.setStock(stock);
+						break;
+					default:
+						throw new Exception("The given filter is not correct.");
+					}
+				
+			}
+			else
+				throw new Exception("Something went wrong with your order's filters.");
+			
+		}
+		
 		return dto;
 	}
 

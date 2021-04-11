@@ -142,6 +142,7 @@ public class OrderController {
 				.contentType(MediaType.APPLICATION_OCTET_STREAM).body(resource);
 		
 	}	
+	
 	@PostMapping("/order/addNew")
 	public Order addNewOrder(@RequestBody Order order) throws BalanceNotEnoughException {
 		Order o = new Order();
