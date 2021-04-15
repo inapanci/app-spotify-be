@@ -42,7 +42,7 @@ public class ProductController {
 
 	@Autowired
 	AccountController accountController;
-	
+
 	@Autowired
 	FilterRepository filterRepo;
 
@@ -77,63 +77,68 @@ public class ProductController {
 		}
 		return prodAccounts;
 	}
-	
+
 	@GetMapping("/product/getById")
 	public Product getProductById(@RequestParam("prodId") int prodId) {
-		Product p = productRepo.findById(prodId).orElseThrow(()-> new RuntimeException("product not found."));
+		Product p = productRepo.findById(prodId).orElseThrow(() -> new RuntimeException("product not found."));
 		return p;
 	}
-	
+
 	@GetMapping("/product/getAccountProductInfo")
-	public AccountProductDto getAccountProductInfo(@RequestParam("prodId") int prodId, @RequestParam(name="filters", required=false) List<String> filterDetails) throws Exception {
+	public AccountProductDto getAccountProductInfo(@RequestParam("prodId") int prodId,
+			@RequestBody(required = false) List<Filter> filters) throws Exception {// @RequestParam(name="filters",
+																					// required=false) List<String>
+																					// filterDetails)
 		AccountProductDto dto = new AccountProductDto();
 		List<String> subTypes = accountRepo.findDistinctSubscriptions();
-		Product p = productRepo.findById(prodId).orElseThrow(()-> new RuntimeException("product not found."));
-		
+		Product p = productRepo.findById(prodId).orElseThrow(() -> new RuntimeException("product not found."));
+
 		List<String> finalReturn = new ArrayList<>();
-		for(String s: subTypes) {
+		for (String s : subTypes) {
 			String finalS = s;
-			if(s.charAt(0) == ' ' || s.charAt(s.length() -1) == ' ') {
+			if (s.charAt(0) == ' ' || s.charAt(s.length() - 1) == ' ') {
 				finalS = s.trim();
 			}
-			if(finalReturn.contains(finalS)) continue;
+			if (finalReturn.contains(finalS))
+				continue;
 			finalReturn.add(s);
 		}
 		dto.setSubscriptionTypes(finalReturn);
 		dto.setCountries(accountRepo.findDistinctCountries());
 		dto.setFormats(productRepo.findAllFormat());
 		dto.setProduct(p);
-		
-		int stock=accountRepo.findByProductId(p.getId()).size();
-		if(filterDetails.isEmpty()) {
+
+		int stock = accountRepo.findByProductId(p.getId()).size();
+		if (filters == null || filters.isEmpty()) {
 			dto.setStock(stock);
-		}
-		else {
-			if (filterDetails.size()==filterRepo.findAll().size()) {
-				stock = accountRepo.findByCountryAndSubscriptionTypeAndProductId(filterDetails.get(0), filterDetails.get(1), p.getId()).size();
+		} else {
+			if (filters.size() == filterRepo.findAll().size()) {
+				stock = accountRepo.findByCountryAndSubscriptionTypeAndProductId(filters.get(0).getDescription(),
+						filters.get(1).getDescription(), p.getId()).size();
 				dto.setStock(stock);
-			}
-			else if (filterDetails.size()==1) {
-				 
-					switch (filterDetails.get(0)) {
-					case "country":
-						stock = accountRepo.findByCountryAndProductId(filterDetails.get(0), p.getId()).size();
-						dto.setStock(stock);
-						break;
-					case "subscription":
-						stock = accountRepo.findBySubscriptionTypeAndProductId(filterDetails.get(0), p.getId()).size();
-						dto.setStock(stock);
-						break;
-					default:
-						throw new Exception("The given filter is not correct.");
-					}
-				
-			}
-			else
+			} else if (filters.size() == 1) {
+				Filter f = filterRepo.findById(filters.get(0).getId())
+						.orElseThrow(() -> new RuntimeException("filter not found"));
+
+				switch (f.getDescription()) {
+				case "country":
+					stock = accountRepo.findByCountryAndProductId(filters.get(0).getDescription(), p.getId()).size();
+					dto.setStock(stock);
+					break;
+				case "subscription":
+					stock = accountRepo.findBySubscriptionTypeAndProductId(filters.get(0).getDescription(), p.getId())
+							.size();
+					dto.setStock(stock);
+					break;
+				default:
+					throw new Exception("The given filter is not correct.");
+				}
+
+			} else
 				throw new Exception("Something went wrong with your order's filters.");
-			
+
 		}
-		
+
 		return dto;
 	}
 
@@ -162,8 +167,7 @@ public class ProductController {
 			@RequestPart(name = "accounts", required = false) MultipartFile accountsFile) throws IOException {
 
 		Product p = new ObjectMapper().readValue(productInfo, Product.class);
-		Product prod = productRepo.findById(p.getId())
-				.orElseThrow(() -> new RuntimeException("product not found"));
+		Product prod = productRepo.findById(p.getId()).orElseThrow(() -> new RuntimeException("product not found"));
 
 		prod.setCreatedAt(p.getCreatedAt());
 		prod.setDeliveryTime(p.getDeliveryTime());
@@ -177,7 +181,7 @@ public class ProductController {
 		prod.setSort(p.getSort());
 		prod.setTitle(p.getTitle());
 		prod.setWarranty(p.getWarranty());
-		
+
 		if (file != null) {
 			prod.setProductImage(file.getBytes());
 		}
@@ -193,6 +197,12 @@ public class ProductController {
 
 		return prod;
 
+	}
+
+	// test
+	@GetMapping("/getfilters")
+	public List<Filter> getAllFilters() {
+		return filterRepo.findAll();
 	}
 
 }

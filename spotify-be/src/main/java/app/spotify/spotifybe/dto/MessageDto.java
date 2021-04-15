@@ -10,8 +10,9 @@ public class MessageDto {
 	private Date createdAt;
 	private String description;
 	private String read;
-	private Ticket ticket;
-	//private UserDto user;
+	private Integer ticketId;
+	private String userId;
+	
 	public long getId() {
 		return id;
 	}
@@ -36,10 +37,17 @@ public class MessageDto {
 	public void setRead(String read) {
 		this.read = read;
 	}
-	public Ticket getTicket() {
-		return ticket;
+	public Integer getTicketId() {
+		return ticketId;
 	}
-	public void setTicket(Ticket ticket) {
-		this.ticket = ticket;
+	public void setTicketId(Integer ticketId) {
+		this.ticketId = ticketId;
 	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
 }
