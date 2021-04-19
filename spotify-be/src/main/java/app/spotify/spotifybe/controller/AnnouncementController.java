@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import app.spotify.spotifybe.dto.AnnouncementDto;
 import app.spotify.spotifybe.model.Announcement;
 import app.spotify.spotifybe.repository.AnnouncementRepository;
 
@@ -29,13 +30,18 @@ public class AnnouncementController {
 	}
 	
 	@PostMapping("/announcement/addNew")
-	public Announcement addNew(@RequestBody Announcement a) {
+	public AnnouncementDto addNew(@RequestBody Announcement a) {
 		Announcement an = new Announcement();
 		an.setDescription(a.getDescription());
 		an.setCreatedAt(java.sql.Timestamp.valueOf(LocalDateTime.now()));
 		an.setUser(a.getUser());
 		announcementRepo.save(an);
-		return an;
+		AnnouncementDto dto = new AnnouncementDto();
+		dto.setCreatedAt(an.getCreatedAt());
+		dto.setUserId(an.getUser().getId());
+		dto.setDescription(an.getDescription());
+		dto.setId(an.getId());
+		return dto;
 	}
 	
 	@DeleteMapping("/announcement/deleteAnnouncement")

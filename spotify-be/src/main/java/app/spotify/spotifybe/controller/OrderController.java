@@ -28,10 +28,12 @@ import app.spotify.spotifybe.dto.AccountProductDto;
 import app.spotify.spotifybe.dto.OrderUserProdDto;
 import app.spotify.spotifybe.exception.BalanceNotEnoughException;
 import app.spotify.spotifybe.model.Account;
+import app.spotify.spotifybe.model.Filter;
 import app.spotify.spotifybe.model.Order;
 import app.spotify.spotifybe.model.Product;
 import app.spotify.spotifybe.model.User;
 import app.spotify.spotifybe.repository.AccountRepository;
+import app.spotify.spotifybe.repository.FilterRepository;
 import app.spotify.spotifybe.repository.OrderRepository;
 import app.spotify.spotifybe.repository.OrderStatusRepository;
 import app.spotify.spotifybe.repository.ProductRepository;
@@ -41,30 +43,32 @@ import app.spotify.spotifybe.repository.UserRepository;
 @RestController
 @RequestMapping("/spotify")
 public class OrderController {
-	
+
 	@Autowired
 	OrderRepository orderRepo;
-	
+
 	@Autowired
 	OrderStatusRepository oStatusRepo;
-	
+
 	@Autowired
 	UserRepository userRepo;
-	
+
 	@Autowired
 	AccountRepository accountRepo;
 
-	
+	@Autowired
+	FilterRepository filterRepo;
+
 	@GetMapping("/order/getAll")
-	public List<Order> getAllOrders(){
+	public List<Order> getAllOrders() {
 		return orderRepo.findAll();
 	}
-	
+
 	@GetMapping("/order/getAllDto")
-	public List<OrderUserProdDto> getAllDto(){
+	public List<OrderUserProdDto> getAllDto() {
 		List<Order> orders = orderRepo.findAll();
 		List<OrderUserProdDto> orderUserProd = new ArrayList<>();
-		for(Order o : orders) {
+		for (Order o : orders) {
 			OrderUserProdDto dto = new OrderUserProdDto();
 			dto.setId(o.getId());
 			dto.setOrderDate(o.getOrderDate());
@@ -79,18 +83,18 @@ public class OrderController {
 		}
 		return orderUserProd;
 	}
-	
+
 	@GetMapping("/order/getById")
 	public Order getOrderById(@RequestParam("orderId") long orId) {
 		return orderRepo.findById(orId).orElseThrow(() -> new RuntimeException("Cannot find this order."));
 	}
-	
+
 	@GetMapping("/order/getAllOfUser")
-	public List<OrderUserProdDto> getAllOrdersOfUser(@RequestParam(name="uuid") String uuid){
-		User user = userRepo.findById(uuid).orElseThrow(()->new RuntimeException("user not found"));
+	public List<OrderUserProdDto> getAllOrdersOfUser(@RequestParam(name = "uuid") String uuid) {
+		User user = userRepo.findById(uuid).orElseThrow(() -> new RuntimeException("user not found"));
 		List<Order> orders = orderRepo.findByUserId(user.getId());
 		List<OrderUserProdDto> orderUserProd = new ArrayList<>();
-		for(Order o : orders) {
+		for (Order o : orders) {
 			OrderUserProdDto dto = new OrderUserProdDto();
 			dto.setId(o.getId());
 			dto.setOrderDate(o.getOrderDate());
@@ -104,20 +108,59 @@ public class OrderController {
 			orderUserProd.add(dto);
 		}
 		return orderUserProd;
-		
+
 	}
-	
+
 	@GetMapping("/order/downloadOrderAccounts")
-	public ResponseEntity<Resource> downloadOrderAccounts(@RequestParam("orderId")long orderId, HttpServletResponse response) throws Exception{
-		List<Account> accounts = accountRepo.getAllAccountsOfOrder(orderId);
-		if(accounts.isEmpty()) {
-			throw new Exception("No accounts were found for order:"+ orderId);
+	public ResponseEntity<Resource> downloadOrderAccounts(@RequestParam("orderId") long orderId,
+			@RequestBody(required = false) List<Filter> filters, HttpServletResponse response) throws Exception {
+
+		Order o = orderRepo.findById(orderId).orElseThrow(() -> new RuntimeException("order not found."));
+		List<Account> accounts = new ArrayList<>();
+		List<Account> subList = new ArrayList<>();
+		// apply quantity to accounts list dhe check sa her jan shit
+		if (filters != null && !filters.isEmpty()) {
+			if (filters.size() == filterRepo.findAll().size()) {
+				accounts = accountRepo.findByCountryAndSubscriptionTypeAndProductId(filters.get(0).getDescription(),
+						filters.get(1).getDescription(), o.getProduct().getId());
+			} else if (filters.size() == 1) {
+				Filter f = filterRepo.findById(filters.get(0).getId())
+						.orElseThrow(() -> new RuntimeException("filter not found"));
+
+				switch (f.getDescription()) {
+				case "country":
+					accounts = accountRepo.findByCountryAndProductId(filters.get(0).getDescription(),
+							o.getProduct().getId());
+					break;
+				case "subscription":
+					accounts = accountRepo.findBySubscriptionTypeAndProductId(filters.get(0).getDescription(),
+							o.getProduct().getId());
+					break;
+				default:
+					throw new Exception("The given filter is not correct.");
+				}
+
+			} else
+				throw new Exception("Something went wrong with your order's filters.");
+		} else {
+			accounts = accountRepo.getAllAccountsOfOrder(orderId, o.getQuantity());
 		}
-		File file = new File("files/accounts"+orderId+".txt"); //new File("/some/absolute/path/myfile.txt");
+
+		if (accounts.isEmpty()) {
+			throw new Exception("No accounts were found for order: " + orderId);
+		} else {
+			for (Account a : accounts) {
+				int soldToUser = accountRepo.findAccountSoldToUser(a.getId(), o.getUser().getId());
+				if (a.getSold() < 2 && soldToUser != 1 && subList.size() < o.getQuantity()) {
+					subList.add(a);
+				}
+			}
+		}
+		File file = new File("files/accounts" + orderId + ".txt"); // new File("/some/absolute/path/myfile.txt");
 		FileWriter fw = new FileWriter(file);
 		PrintWriter pw = new PrintWriter(fw);
-		
-		for(Account a : accounts) {
+
+		for (Account a : subList) {
 			String newline = "";
 			newline += a.getCredentials() != null ? a.getCredentials() + " | " : "";
 			newline += a.getSubscriptionType() != null ? a.getSubscriptionType() + " | " : "";
@@ -127,22 +170,22 @@ public class OrderController {
 			newline += a.getInviteToken() != null ? a.getInviteToken() + " | " : "";
 			newline += a.getExpire() != null ? a.getExpire() + " | " : "";
 			newline += a.getExtra() != null ? a.getExtra() + " | " : "";
-			
+
 			pw.println(newline);
 		}
 		pw.close();
-		
-		FileSystemResource resource = new FileSystemResource("files/accounts"+orderId+".txt");
+
+		FileSystemResource resource = new FileSystemResource("files/accounts" + orderId + ".txt");
 		if (!resource.exists()) {
-			throw new FileNotFoundException("File non trovato.");
+			throw new FileNotFoundException("File not found.");
 		}
-		
+
 		return ResponseEntity.ok()
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
 				.contentType(MediaType.APPLICATION_OCTET_STREAM).body(resource);
-		
-	}	
-	
+
+	}
+
 	@PostMapping("/order/addNew")
 	public Order addNewOrder(@RequestBody Order order) throws BalanceNotEnoughException {
 		Order o = new Order();
@@ -153,16 +196,15 @@ public class OrderController {
 		o.setUser(order.getUser());
 		o.setValue(order.getValue());
 		o.setFilters(order.getFilters());
-		
-		if(order.getUser().getBalance().compareTo(order.getValue()) > 0) {
+
+		if (order.getUser().getBalance().compareTo(order.getValue()) > 0) { // mduket duhet ==1
 			orderRepo.save(o);
-		}
-		else {
+		} else {
 			throw new BalanceNotEnoughException("You do not have enough balance to complete this order.");
 		}
-				
+
 		return o;
-		
+
 	}
-	
+
 }

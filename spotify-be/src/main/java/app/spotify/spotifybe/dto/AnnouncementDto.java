@@ -6,7 +6,8 @@ public class AnnouncementDto {
 	private int id;
 	private Date createdAt;
 	private String description;
-	//private UserDto user;
+	private String userId;
+	
 	public int getId() {
 		return id;
 	}
@@ -24,6 +25,12 @@ public class AnnouncementDto {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 }
