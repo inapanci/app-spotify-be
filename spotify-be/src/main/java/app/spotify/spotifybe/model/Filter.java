@@ -24,6 +24,9 @@ public class Filter implements Serializable {
 	private String description;
 
 	private BigDecimal price;
+	
+	@Column(name="filter_value", length=250)
+	private String filterValue;
 
 	//bi-directional many-to-many association to Order
 	@ManyToMany(mappedBy="filters")
@@ -32,12 +35,13 @@ public class Filter implements Serializable {
 	public Filter() {
 	}
 
-	public Filter(int id, String description, BigDecimal price, List<Order> orders) {
+	public Filter(int id, String description, BigDecimal price, List<Order> orders, String filterValue) {
 		super();
 		this.id = id;
 		this.description = description;
 		this.price = price;
 		this.orders = orders;
+		this.filterValue = filterValue;
 	}
 
 	public int getId() {
@@ -72,9 +76,18 @@ public class Filter implements Serializable {
 		this.orders = orders;
 	}
 
+	public String getFilterValue() {
+		return filterValue;
+	}
+
+	public void setFilterValue(String filterValue) {
+		this.filterValue = filterValue;
+	}
+
 	@Override
 	public String toString() {
-		return "Filter [id=" + id + ", description=" + description + ", price=" + price + ", orders=" + orders + "]";
+		return "Filter [id=" + id + ", description=" + description + ", price=" + price + ", filterValue=" + filterValue
+				+ ", orders=" + orders + "]";
 	}
 
 }

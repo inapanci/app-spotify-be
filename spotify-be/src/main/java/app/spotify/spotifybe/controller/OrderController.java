@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import app.spotify.spotifybe.dto.AccountProductDto;
+import app.spotify.spotifybe.dto.OrderDto;
 import app.spotify.spotifybe.dto.OrderUserProdDto;
 import app.spotify.spotifybe.exception.BalanceNotEnoughException;
 import app.spotify.spotifybe.model.Account;
@@ -85,13 +86,23 @@ public class OrderController {
 	}
 
 	@GetMapping("/order/getById")
-	public Order getOrderById(@RequestParam("orderId") long orId) {
-		return orderRepo.findById(orId).orElseThrow(() -> new RuntimeException("Cannot find this order."));
+	public OrderDto getOrderById(@RequestParam("orderId") long orId) {
+		Order o = orderRepo.findById(orId).orElseThrow(() -> new RuntimeException("Cannot find the requested order."));
+		OrderDto dto = new OrderDto();
+		dto.setId(o.getId());
+		dto.setOrderDate(o.getOrderDate());
+		dto.setQuantity(o.getQuantity());
+		dto.setUserId(o.getUser().getId());
+		dto.setValue(o.getValue());
+		dto.setFilters(o.getFilters().size());
+		dto.setProductId(o.getProduct().getId());
+		dto.setOrderStatus(o.getOrderStatus().getDescription());
+		return dto;
 	}
 
 	@GetMapping("/order/getAllOfUser")
 	public List<OrderUserProdDto> getAllOrdersOfUser(@RequestParam(name = "uuid") String uuid) {
-		User user = userRepo.findById(uuid).orElseThrow(() -> new RuntimeException("user not found"));
+		User user = userRepo.findById(uuid).orElseThrow(() -> new RuntimeException("User not found."));
 		List<Order> orders = orderRepo.findByUserId(user.getId());
 		List<OrderUserProdDto> orderUserProd = new ArrayList<>();
 		for (Order o : orders) {
@@ -113,27 +124,26 @@ public class OrderController {
 
 	@GetMapping("/order/downloadOrderAccounts")
 	public ResponseEntity<Resource> downloadOrderAccounts(@RequestParam("orderId") long orderId,
-			@RequestBody(required = false) List<Filter> filters, HttpServletResponse response) throws Exception {
+			 HttpServletResponse response) throws Exception {
 
-		Order o = orderRepo.findById(orderId).orElseThrow(() -> new RuntimeException("order not found."));
+		Order o = orderRepo.findById(orderId).orElseThrow(() -> new RuntimeException("Cannot find the requested order."));
+		List<Filter> filters = o.getFilters();
 		List<Account> accounts = new ArrayList<>();
 		List<Account> subList = new ArrayList<>();
 		// apply quantity to accounts list dhe check sa her jan shit
 		if (filters != null && !filters.isEmpty()) {
-			if (filters.size() == filterRepo.findAll().size()) {
-				accounts = accountRepo.findByCountryAndSubscriptionTypeAndProductId(filters.get(0).getDescription(),
-						filters.get(1).getDescription(), o.getProduct().getId());
+			if (filters.size() == 2) {
+				accounts = accountRepo.findByCountryAndSubscriptionTypeAndProductId(filters.get(0).getFilterValue(),
+						filters.get(1).getFilterValue(), o.getProduct().getId());
 			} else if (filters.size() == 1) {
-				Filter f = filterRepo.findById(filters.get(0).getId())
-						.orElseThrow(() -> new RuntimeException("filter not found"));
-
-				switch (f.getDescription()) {
+			
+				switch (filters.get(0).getDescription()) {
 				case "country":
-					accounts = accountRepo.findByCountryAndProductId(filters.get(0).getDescription(),
+					accounts = accountRepo.findByCountryAndProductId(filters.get(0).getFilterValue(),
 							o.getProduct().getId());
 					break;
 				case "subscription":
-					accounts = accountRepo.findBySubscriptionTypeAndProductId(filters.get(0).getDescription(),
+					accounts = accountRepo.findBySubscriptionTypeAndProductId(filters.get(0).getFilterValue(),
 							o.getProduct().getId());
 					break;
 				default:
@@ -147,7 +157,7 @@ public class OrderController {
 		}
 
 		if (accounts.isEmpty()) {
-			throw new Exception("No accounts were found for order: " + orderId);
+			throw new Exception("No accounts were found for your order.");
 		} else {
 			for (Account a : accounts) {
 				int soldToUser = accountRepo.findAccountSoldToUser(a.getId(), o.getUser().getId());
@@ -197,7 +207,7 @@ public class OrderController {
 		o.setValue(order.getValue());
 		o.setFilters(order.getFilters());
 
-		if (order.getUser().getBalance().compareTo(order.getValue()) > 0) { // mduket duhet ==1
+		if (order.getUser().getBalance().compareTo(order.getValue()) == 1) { // mduket duhet ==1 //ishte >0
 			orderRepo.save(o);
 		} else {
 			throw new BalanceNotEnoughException("You do not have enough balance to complete this order.");

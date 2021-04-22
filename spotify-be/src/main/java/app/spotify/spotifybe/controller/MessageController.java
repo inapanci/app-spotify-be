@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.spotify.spotifybe.dto.MessageDto;
+import app.spotify.spotifybe.exception.BusinessException;
 import app.spotify.spotifybe.model.Message;
 import app.spotify.spotifybe.model.Ticket;
 import app.spotify.spotifybe.repository.MessageRepository;
@@ -71,7 +72,7 @@ public class MessageController {
 	}
 
 	@PostMapping("/message/addNew")
-	public void addNewMessage(@RequestBody Message msg) {
+	public void addNewMessage(@RequestBody Message msg) throws BusinessException {
 		Message m = new Message();
 		m.setDescription(msg.getDescription());
 		m.setCreatedAt(java.sql.Timestamp.valueOf(LocalDateTime.now()));
@@ -84,8 +85,12 @@ public class MessageController {
 			ticketRepo.save(ticket);
 			m.setTicket(ticket);
 		}
-		messageRepo.save(m);
-//		/return m;
-		
+		try {
+			messageRepo.save(m);
+			
+		} catch (Exception e) {
+			throw new BusinessException("Message could not be posted.");
+		}
+		//		/return m;
 	}
 }

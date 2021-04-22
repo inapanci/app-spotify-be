@@ -2,6 +2,7 @@ package app.spotify.spotifybe.dto;
 
 import java.util.List;
 
+import app.spotify.spotifybe.model.Filter;
 import app.spotify.spotifybe.model.Product;
 
 public class AccountProductDto {
@@ -11,7 +12,7 @@ public class AccountProductDto {
 	private List<String> countries;
 	private List<String> formats;
 	private int stock;
-
+	private List<Filter> filters;
 	private Product product;
 		
 	public AccountProductDto() {
@@ -65,6 +66,14 @@ public class AccountProductDto {
 
 	public void setProduct(Product product) {
 		this.product = product;
+	}
+
+	public List<Filter> getFilters() {
+		return filters;
+	}
+
+	public void setFilters(List<Filter> filters) {
+		this.filters = filters;
 	}
 	
 }

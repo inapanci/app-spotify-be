@@ -7,6 +7,7 @@ public class FilterDto {
 	private int id;
 	private String description;
 	private BigDecimal price;
+	private String filterValue;
 	//private List<OrderDto> orders;
 	public int getId() {
 		return id;
@@ -25,6 +26,12 @@ public class FilterDto {
 	}
 	public void setPrice(BigDecimal price) {
 		this.price = price;
+	}
+	public String getFilterValue() {
+		return filterValue;
+	}
+	public void setFilterValue(String filterValue) {
+		this.filterValue = filterValue;
 	}
 	
 }

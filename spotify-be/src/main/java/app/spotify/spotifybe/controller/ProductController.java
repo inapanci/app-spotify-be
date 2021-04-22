@@ -1,7 +1,6 @@
 package app.spotify.spotifybe.controller;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import app.spotify.spotifybe.dto.AccountProductDto;
 import app.spotify.spotifybe.dto.ProductAccountsDto;
+import app.spotify.spotifybe.exception.BusinessException;
 import app.spotify.spotifybe.model.Account;
 import app.spotify.spotifybe.model.Filter;
 import app.spotify.spotifybe.model.Product;
@@ -79,16 +79,14 @@ public class ProductController {
 	}
 
 	@GetMapping("/product/getById")
-	public Product getProductById(@RequestParam("prodId") int prodId) {
-		Product p = productRepo.findById(prodId).orElseThrow(() -> new RuntimeException("product not found."));
-		return p;
+	public Product getProductById(@RequestParam("prodId") int prodId) { 
+		return productRepo.findById(prodId).orElseThrow(() -> new RuntimeException("product not found."));
 	}
 
 	@GetMapping("/product/getAccountProductInfo")
 	public AccountProductDto getAccountProductInfo(@RequestParam("prodId") int prodId,
-			@RequestBody(required = false) List<Filter> filters) throws Exception {// @RequestParam(name="filters",
-																					// required=false) List<String>
-																					// filterDetails)
+			@RequestBody(required = false) List<Filter> filters) throws BusinessException {
+		
 		AccountProductDto dto = new AccountProductDto();
 		List<String> subTypes = accountRepo.findDistinctSubscriptions();
 		Product p = productRepo.findById(prodId).orElseThrow(() -> new RuntimeException("product not found."));
@@ -112,30 +110,53 @@ public class ProductController {
 		if (filters == null || filters.isEmpty()) {
 			dto.setStock(stock);
 		} else {
-			if (filters.size() == filterRepo.findAll().size()) {
-				stock = accountRepo.findByCountryAndSubscriptionTypeAndProductId(filters.get(0).getDescription(),
-						filters.get(1).getDescription(), p.getId()).size();
+			filterRepo.saveAll(filters);
+			dto.setFilters(filters);
+			if(filters.size()==2) {
+				stock = accountRepo.findByCountryAndSubscriptionTypeAndProductId(filters.get(0).getFilterValue(),
+						filters.get(1).getFilterValue(), p.getId()).size();
 				dto.setStock(stock);
 			} else if (filters.size() == 1) {
-				Filter f = filterRepo.findById(filters.get(0).getId())
-						.orElseThrow(() -> new RuntimeException("filter not found"));
-
-				switch (f.getDescription()) {
+				switch (filters.get(0).getDescription()) {
 				case "country":
-					stock = accountRepo.findByCountryAndProductId(filters.get(0).getDescription(), p.getId()).size();
+					stock = accountRepo.findByCountryAndProductId(filters.get(0).getFilterValue(), p.getId()).size();
 					dto.setStock(stock);
 					break;
 				case "subscription":
-					stock = accountRepo.findBySubscriptionTypeAndProductId(filters.get(0).getDescription(), p.getId())
+					stock = accountRepo.findBySubscriptionTypeAndProductId(filters.get(0).getFilterValue(), p.getId())
 							.size();
 					dto.setStock(stock);
 					break;
 				default:
-					throw new Exception("The given filter is not correct.");
+					throw new BusinessException("The given filter is not correct.");
 				}
-
-			} else
-				throw new Exception("Something went wrong with your order's filters.");
+			}else {
+				throw new BusinessException("Something went wrong with your order's filters.");
+			}
+//			if (filters.size() == filterRepo.findAll().size()) {
+//				stock = accountRepo.findByCountryAndSubscriptionTypeAndProductId(filters.get(0).getDescription(),
+//						filters.get(1).getDescription(), p.getId()).size();
+//				dto.setStock(stock);
+//			} else if (filters.size() == 1) {
+//				Filter f = filterRepo.findById(filters.get(0).getId())
+//						.orElseThrow(() -> new RuntimeException("filter not found"));
+//
+//				switch (f.getDescription()) {
+//				case "country":
+//					stock = accountRepo.findByCountryAndProductId(filters.get(0).getDescription(), p.getId()).size();
+//					dto.setStock(stock);
+//					break;
+//				case "subscription":
+//					stock = accountRepo.findBySubscriptionTypeAndProductId(filters.get(0).getDescription(), p.getId())
+//							.size();
+//					dto.setStock(stock);
+//					break;
+//				default:
+//					throw new Exception("The given filter is not correct.");
+//				}
+//
+//			} else
+//				throw new Exception("Something went wrong with your order's filters.");
 
 		}
 
@@ -146,17 +167,23 @@ public class ProductController {
 			MediaType.MULTIPART_FORM_DATA_VALUE })
 	public Product addNewProduct(@RequestPart("productInfo") String productInfo,
 			@RequestPart("productImage") MultipartFile file, @RequestPart("accounts") MultipartFile accountsFile)
-			throws IOException {
+			throws IOException, BusinessException {
 		Product product = new ObjectMapper().readValue(productInfo, Product.class);
 		product.setProductImage(file.getBytes());
-		productRepo.save(product);
-
-		List<Account> accounts = accountController.uploadAccounts(accountsFile);
-		for (Account a : accounts) {
-			a.setProduct(product);
-			accountRepo.save(a);
+		try {
+			productRepo.save(product);
+		} catch (Exception e) {
+			throw new BusinessException("Something went wrong. Product could not be saved.");
 		}
-
+		List<Account> accounts = accountController.uploadAccounts(accountsFile);
+		try {
+			for (Account a : accounts) {
+				a.setProduct(product);
+				accountRepo.save(a);
+			} 
+		} catch (Exception e) {
+			throw new BusinessException("Something went wrong. Product accounts could not be uploaded.");		
+		}
 		return product;
 	}
 
@@ -164,7 +191,7 @@ public class ProductController {
 			MediaType.MULTIPART_FORM_DATA_VALUE })
 	public Product updateProduct(@RequestPart(name = "productInfo", required = false) String productInfo,
 			@RequestPart(name = "productImage", required = false) MultipartFile file,
-			@RequestPart(name = "accounts", required = false) MultipartFile accountsFile) throws IOException {
+			@RequestPart(name = "accounts", required = false) MultipartFile accountsFile) throws IOException, BusinessException {
 
 		Product p = new ObjectMapper().readValue(productInfo, Product.class);
 		Product prod = productRepo.findById(p.getId()).orElseThrow(() -> new RuntimeException("product not found"));
@@ -185,21 +212,28 @@ public class ProductController {
 		if (file != null) {
 			prod.setProductImage(file.getBytes());
 		}
-		productRepo.save(prod);
-
-		if (accountsFile != null) {
-			List<Account> accounts = accountController.uploadAccounts(accountsFile);
-			for (Account a : accounts) {
-				a.setProduct(prod);
-				accountRepo.save(a);
-			}
+		try {
+			productRepo.save(prod);
+		} catch (Exception e) {
+			throw new BusinessException("Something went wrong. Product could not be saved.");
 		}
 
+		try {
+			if (accountsFile != null) {
+				List<Account> accounts = accountController.uploadAccounts(accountsFile);
+				for (Account a : accounts) {
+					a.setProduct(prod);
+					accountRepo.save(a);
+				}
+			} 
+		} catch (Exception e) {
+			throw new BusinessException("Something went wrong. Product accounts could not be uploaded.");	
+		}
 		return prod;
 
 	}
 
-	// test
+	// not to create new controller
 	@GetMapping("/getfilters")
 	public List<Filter> getAllFilters() {
 		return filterRepo.findAll();

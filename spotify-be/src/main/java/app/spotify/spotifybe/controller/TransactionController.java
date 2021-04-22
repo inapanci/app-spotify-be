@@ -1,5 +1,6 @@
 package app.spotify.spotifybe.controller;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import app.spotify.spotifybe.dto.TransactionUserDto;
+import app.spotify.spotifybe.exception.BusinessException;
 import app.spotify.spotifybe.model.Transaction;
+import app.spotify.spotifybe.model.User;
 import app.spotify.spotifybe.repository.PaymentMethodRepository;
 import app.spotify.spotifybe.repository.TransactionRepository;
 import app.spotify.spotifybe.repository.UserRepository;
@@ -31,15 +34,17 @@ public class TransactionController {
 	@Autowired
 	PaymentMethodRepository paymentMethodsRepo;
 
+	@Autowired
+	UserRepository userRepo;
+
 	@GetMapping("/transaction/getAll")
 	public List<Transaction> getAllTransactions() {
 		return transactionRepo.findAll();
 	}
 
-	@GetMapping("/transaction/getOne")
-	public Object getAllTransactions(@RequestParam long id) {
-		System.out.println(id);
-		return transactionRepo.findById(id);
+	@GetMapping("/transaction/getById")
+	public Transaction getAllTransactions(@RequestParam long id) {
+		return transactionRepo.findById(id).orElseThrow(() -> new RuntimeException("Transaction not found."));
 	}
 
 	// method gets all transactions but needs only some information for user
@@ -92,16 +97,32 @@ public class TransactionController {
 	}
 
 	@PutMapping("/transaction/updateTransaction")
-	public Transaction updateTransactionStatus(@RequestBody Transaction transaction) {
+	public Transaction updateTransactionStatus(@RequestBody Transaction transaction) throws BusinessException {
 		Transaction t = transactionRepo.findById(transaction.getId())
-				.orElseThrow(() -> new RuntimeException("transaction not found."));
+				.orElseThrow(() -> new RuntimeException("Transaction not found."));
 		t.setTransactionStatus(transaction.getTransactionStatus());
-		transactionRepo.save(t);
+		BigDecimal oldAmount = t.getAmount();
+
+		try {
+			transactionRepo.save(t);
+			User u = null;
+			if (oldAmount != transaction.getAmount()) {
+				u = userRepo.findById(t.getUser().getId()).get();
+				if(u.getBalance()!=null) {
+					u.setBalance(u.getBalance().add(transaction.getAmount()));
+				}else {
+					u.setBalance(transaction.getAmount());
+				}		
+			}
+			userRepo.save(u);
+		} catch (Exception e) {
+			throw new BusinessException("Transaction could not be saved.");
+		}
 		return t;
 	}
 
 	@PostMapping("/transaction/addFunds")
-	public Transaction addFunds(@RequestBody Transaction tr) {
+	public Transaction addFunds(@RequestBody Transaction tr) throws BusinessException {
 		Transaction t = new Transaction();
 		t.setAmount(tr.getAmount());
 		t.setCreatedAt(java.sql.Timestamp.valueOf(LocalDateTime.now()));
@@ -111,7 +132,18 @@ public class TransactionController {
 		t.setTransactionStatus(tr.getTransactionStatus());
 		t.setUser(tr.getUser());
 
-		transactionRepo.save(t);
+		try {
+			transactionRepo.save(t);
+			User u = userRepo.findById(t.getUser().getId()).get();
+			if(u.getBalance()!=null) {
+				u.setBalance(u.getBalance().add(t.getAmount()));
+			}else {
+				u.setBalance(t.getAmount());
+			}
+			userRepo.save(u);
+		} catch (Exception e) {
+			throw new BusinessException("Transaction could not be saved.");
+		}
 		return t;
 	}
 

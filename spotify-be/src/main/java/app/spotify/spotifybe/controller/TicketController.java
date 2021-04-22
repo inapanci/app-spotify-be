@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import app.spotify.spotifybe.dto.TicketUserDto;
+import app.spotify.spotifybe.exception.BusinessException;
 import app.spotify.spotifybe.model.Ticket;
 import app.spotify.spotifybe.repository.TicketRepository;
 
@@ -33,7 +34,7 @@ public class TicketController {
 
 	@GetMapping("/ticket/getById")
 	public Ticket getTicketById(@RequestParam("ticketId") int ticketId) {
-		return ticketRepo.findById(ticketId).orElseThrow(() -> new RuntimeException("ticket not found."));
+		return ticketRepo.findById(ticketId).orElseThrow(() -> new RuntimeException("Ticket not found."));
 	}
 
 	@GetMapping("/ticket/getAllOfUser")
@@ -91,16 +92,20 @@ public class TicketController {
 	}
 
 	@PutMapping("/ticket/updateTicket")
-	public Ticket updateTicketStatus(@RequestBody Ticket t) {
+	public Ticket updateTicketStatus(@RequestBody Ticket t) throws BusinessException {
 		Ticket tick = ticketRepo.findById(t.getId()).orElseThrow(() -> new RuntimeException("ticket not found."));
 		tick.setUpdatedAt(java.sql.Timestamp.valueOf(LocalDateTime.now()));
 		tick.setTicketStatus(t.getTicketStatus());
-		ticketRepo.save(tick);
+		try {
+			ticketRepo.save(tick);
+		} catch (Exception e) {
+			throw new BusinessException("Ticket could not be updated.");
+		}
 		return tick;
 	}
 
 	@PostMapping("/ticket/addNew")
-	public Ticket addNewTicket(@RequestBody Ticket t) {
+	public Ticket addNewTicket(@RequestBody Ticket t) throws BusinessException {
 		Ticket tick = new Ticket();
 		tick.setCreatedAt(java.sql.Timestamp.valueOf(LocalDateTime.now()));
 		tick.setNotes(t.getNotes());
@@ -108,7 +113,11 @@ public class TicketController {
 		tick.setTitle(t.getTitle());
 		tick.setUpdatedAt(java.sql.Timestamp.valueOf(LocalDateTime.now()));
 		tick.setUser(t.getUser());
-		ticketRepo.save(tick);
+		try {
+			ticketRepo.save(tick);
+		} catch (Exception e) {
+			throw new BusinessException("Ticket could not be saved.");
+		}
 		return tick;
 	}
 

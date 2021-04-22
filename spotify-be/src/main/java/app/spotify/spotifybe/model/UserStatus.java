@@ -21,18 +21,18 @@ public class UserStatus implements Serializable {
 
 	private String description;
 
-	//bi-directional many-to-one association to User
-	@OneToMany(mappedBy="userStatus")
-	private List<User> users;
+//	//bi-directional many-to-one association to User
+//	@OneToMany(mappedBy="userStatus")
+//	private List<User> users;
 
 	public UserStatus() {
 	}
 
-	public UserStatus(int id, String description, List<User> users) {
+	public UserStatus(int id, String description) {
 		super();
 		this.id = id;
 		this.description = description;
-		this.users = users;
+		//this.users = users;
 	}
 
 	public int getId() {
@@ -51,31 +51,9 @@ public class UserStatus implements Serializable {
 		this.description = description;
 	}
 
-	public List<User> getUsers() {
-		return this.users;
-	}
-
-	public void setUsers(List<User> users) {
-		this.users = users;
-	}
-
-	public User addUser(User user) {
-		getUsers().add(user);
-		user.setUserStatus(this);
-
-		return user;
-	}
-
-	public User removeUser(User user) {
-		getUsers().remove(user);
-		user.setUserStatus(null);
-
-		return user;
-	}
-
 	@Override
 	public String toString() {
-		return "UserStatus [id=" + id + ", description=" + description + ", users=" + users + "]";
+		return "UserStatus [id=" + id + ", description=" + description + "]";
 	}
 
 }

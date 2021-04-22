@@ -31,7 +31,7 @@ public class PaymentMethodController {
 	
 	@GetMapping("/paymentMethod/getById")
 	public PaymentMethod getById(@RequestParam("pmId") int pmId) {
-		return paymentMethRepo.findById(pmId).orElseThrow(()-> new RuntimeException("payment method not found"));
+		return paymentMethRepo.findById(pmId).orElseThrow(()-> new RuntimeException("Payment method could not be found"));
 	}
 	
 	@PutMapping("/paymentMethod/updateSettings")

@@ -10,10 +10,10 @@ public class OrderDto {
 	private Date orderDate;
 	private int quantity;
 	private BigDecimal value;
-	//private List<FilterDto> filters;
-	//private OrderStatusDto orderStatus;
-	//private ProductDto product;
-	//private UserDto user;
+	private Integer filters;
+	private String orderStatus;
+	private Integer productId;
+	private String userId;
 	
 	public long getId() {
 		return id;
@@ -39,4 +39,30 @@ public class OrderDto {
 	public void setValue(BigDecimal value) {
 		this.value = value;
 	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	public Integer getFilters() {
+		return filters;
+	}
+	public void setFilters(Integer filters) {
+		this.filters = filters;
+	}
+	public String getOrderStatus() {
+		return orderStatus;
+	}
+	public void setOrderStatus(String orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+	public Integer getProductId() {
+		return productId;
+	}
+	public void setProductId(Integer productId) {
+		this.productId = productId;
+	}
+	
+	
 }

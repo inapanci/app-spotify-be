@@ -2,6 +2,7 @@ package app.spotify.spotifybe.controller;
 
 import app.spotify.spotifybe.dto.LoginDto;
 import app.spotify.spotifybe.dto.UserDashboardDto;
+import app.spotify.spotifybe.exception.BusinessException;
 import app.spotify.spotifybe.model.User;
 import app.spotify.spotifybe.repository.OrderRepository;
 import app.spotify.spotifybe.repository.TicketRepository;
@@ -61,7 +62,7 @@ public class UserController {
 	}
 	
 	@PutMapping("/user/update")
-	public User updateUser(@RequestBody User user) {
+	public User updateUser(@RequestBody User user) throws BusinessException {
 		User u = userRepo.findById(user.getId()).orElseThrow(()-> new RuntimeException("user not found"));
 		u.setEmail(user.getEmail());
 		u.setUsername(user.getUsername());
@@ -69,7 +70,11 @@ public class UserController {
 		u.setBalance(user.getBalance());
 		u.setUserStatus(user.getUserStatus());
 		u.setPaymentMethods(user.getPaymentMethods());
-		userRepo.save(u);
+		try {
+			userRepo.save(u);
+		} catch (Exception e) {
+			throw new BusinessException("User settings could not be updated.");
+		}
 		return user;
 		
 	}
