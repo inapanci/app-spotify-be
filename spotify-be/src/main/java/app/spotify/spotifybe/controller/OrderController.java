@@ -92,7 +92,7 @@ public class OrderController {
 		dto.setId(o.getId());
 		dto.setOrderDate(o.getOrderDate());
 		dto.setQuantity(o.getQuantity());
-		dto.setUserId(o.getUser().getId());
+		dto.setUser(o.getUser());
 		dto.setValue(o.getValue());
 		dto.setFilters(o.getFilters().size());
 		dto.setProductId(o.getProduct().getId());

@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import app.spotify.spotifybe.model.User;
+
 public class OrderDto {
 
 	private long id;
@@ -13,7 +15,7 @@ public class OrderDto {
 	private Integer filters;
 	private String orderStatus;
 	private Integer productId;
-	private String userId;
+	private User user;
 	
 	public long getId() {
 		return id;
@@ -39,11 +41,12 @@ public class OrderDto {
 	public void setValue(BigDecimal value) {
 		this.value = value;
 	}
-	public String getUserId() {
-		return userId;
+	
+	public User getUser() {
+		return user;
 	}
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setUser(User user) {
+		this.user = user;
 	}
 	public Integer getFilters() {
 		return filters;

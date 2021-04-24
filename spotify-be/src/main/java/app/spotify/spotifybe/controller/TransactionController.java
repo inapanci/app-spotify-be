@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -96,6 +98,7 @@ public class TransactionController {
 		return transacUser;
 	}
 
+	@Transactional
 	@PutMapping("/transaction/updateTransaction")
 	public Transaction updateTransactionStatus(@RequestBody Transaction transaction) throws BusinessException {
 		Transaction t = transactionRepo.findById(transaction.getId())
@@ -121,6 +124,7 @@ public class TransactionController {
 		return t;
 	}
 
+	@Transactional
 	@PostMapping("/transaction/addFunds")
 	public Transaction addFunds(@RequestBody Transaction tr) throws BusinessException {
 		Transaction t = new Transaction();
