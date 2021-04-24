@@ -24,7 +24,7 @@ public class UserDto {
 	
 	private Date signUpDate;
 	
-	private UserStatusDto userStatus;
+	private String userStatus;
 	
 	private List<UserPromotionDto> userPromotions;
 
@@ -108,11 +108,11 @@ public class UserDto {
 		this.userPromotions = userPromotions;
 	}
 
-	public UserStatusDto getUserStatus() {
+	public String getUserStatus() {
 		return userStatus;
 	}
 
-	public void setUserStatus(UserStatusDto userStatus) {
+	public void setUserStatus(String userStatus) {
 		this.userStatus = userStatus;
 	}
 		

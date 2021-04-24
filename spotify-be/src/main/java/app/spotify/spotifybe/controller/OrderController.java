@@ -95,7 +95,7 @@ public class OrderController {
 		dto.setUser(o.getUser());
 		dto.setValue(o.getValue());
 		dto.setFilters(o.getFilters().size());
-		dto.setProductId(o.getProduct().getId());
+		dto.setProduct(o.getProduct());
 		dto.setOrderStatus(o.getOrderStatus().getDescription());
 		return dto;
 	}

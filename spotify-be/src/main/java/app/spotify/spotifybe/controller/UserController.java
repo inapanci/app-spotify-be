@@ -2,6 +2,7 @@ package app.spotify.spotifybe.controller;
 
 import app.spotify.spotifybe.dto.LoginDto;
 import app.spotify.spotifybe.dto.UserDashboardDto;
+import app.spotify.spotifybe.dto.UserDto;
 import app.spotify.spotifybe.exception.BusinessException;
 import app.spotify.spotifybe.model.User;
 import app.spotify.spotifybe.repository.OrderRepository;
@@ -16,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -37,8 +39,24 @@ public class UserController {
 	
 	
 	@GetMapping("/user/getAll")
-	public List<User> getAllUsers(){
-		return userRepo.findAll();
+	public List<UserDto> getAllUsers(){
+		List<User> users = userRepo.findAll();
+		List<UserDto> dtoList = new ArrayList<>();
+		for(User u : users) {
+			UserDto dto = new UserDto();
+			dto.setId(u.getId());
+			dto.setBalance(u.getBalance());
+			dto.setEmail(u.getEmail());
+			dto.setLastSignIn(u.getLastSignIn());
+			dto.setNotifications(u.getNotifications());
+			dto.setPassword(u.getPassword());
+			dto.setRole(u.getRole());
+			dto.setSignUpDate(u.getSignUpDate());
+			dto.setUsername(u.getUsername());
+			dto.setUserStatus(u.getUserStatus().getDescription());
+			dtoList.add(dto);
+		}
+		return dtoList;
 	}
 	
 	@GetMapping("/user/getById")
