@@ -13,7 +13,7 @@ public class OrderDto {
 	private Date orderDate;
 	private int quantity;
 	private BigDecimal value;
-	private Integer filters;
+	private List<FilterDto> filters;
 	private String orderStatus;
 	private Product product;
 	private User user;
@@ -49,10 +49,10 @@ public class OrderDto {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	public Integer getFilters() {
+	public List<FilterDto> getFilters() {
 		return filters;
 	}
-	public void setFilters(Integer filters) {
+	public void setFilters(List<FilterDto> filters) {
 		this.filters = filters;
 	}
 	public String getOrderStatus() {

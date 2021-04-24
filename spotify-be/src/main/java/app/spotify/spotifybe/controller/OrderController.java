@@ -25,12 +25,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import app.spotify.spotifybe.dto.AccountProductDto;
+import app.spotify.spotifybe.dto.FilterDto;
 import app.spotify.spotifybe.dto.OrderDto;
 import app.spotify.spotifybe.dto.OrderUserProdDto;
 import app.spotify.spotifybe.exception.BalanceNotEnoughException;
 import app.spotify.spotifybe.model.Account;
 import app.spotify.spotifybe.model.Filter;
 import app.spotify.spotifybe.model.Order;
+import app.spotify.spotifybe.model.OrderStatus;
 import app.spotify.spotifybe.model.Product;
 import app.spotify.spotifybe.model.User;
 import app.spotify.spotifybe.repository.AccountRepository;
@@ -94,7 +96,17 @@ public class OrderController {
 		dto.setQuantity(o.getQuantity());
 		dto.setUser(o.getUser());
 		dto.setValue(o.getValue());
-		dto.setFilters(o.getFilters().size());
+		List<Filter> filters = o.getFilters();
+		List<FilterDto> dtoList = new ArrayList<>();
+		for(Filter f : filters) {
+			FilterDto dtof = new FilterDto();
+			dtof.setDescription(f.getDescription());
+			dtof.setFilterValue(f.getFilterValue());
+			dtof.setId(f.getId());
+			dtof.setPrice(f.getPrice());
+			dtoList.add(dtof);
+		}
+		dto.setFilters(dtoList);
 		dto.setProduct(o.getProduct());
 		dto.setOrderStatus(o.getOrderStatus().getDescription());
 		return dto;
@@ -120,6 +132,12 @@ public class OrderController {
 		}
 		return orderUserProd;
 
+	}
+	
+	@GetMapping("/getOrderStatusByDescription")
+	public OrderStatus getByDescription(@RequestParam("descr") String descr) {
+		return oStatusRepo.findByDescription(descr);
+		
 	}
 
 	@GetMapping("/order/downloadOrderAccounts")
