@@ -30,7 +30,7 @@ public class Order implements Serializable {
 	private BigDecimal value;
 
 	//bi-directional many-to-many association to Filter
-	@ManyToMany
+	@ManyToMany(cascade = {CascadeType.ALL})
 	@JoinTable(
 		name="order_filters"
 		, joinColumns={

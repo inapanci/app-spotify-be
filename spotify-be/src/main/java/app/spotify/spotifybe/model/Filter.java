@@ -29,7 +29,7 @@ public class Filter implements Serializable {
 	private String filterValue;
 
 	//bi-directional many-to-many association to Order
-	@ManyToMany(mappedBy="filters")
+	@ManyToMany(mappedBy="filters", cascade = {CascadeType.ALL})
 	private List<Order> orders;
 
 	public Filter() {

@@ -3,6 +3,7 @@ package app.spotify.spotifybe.controller;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import app.spotify.spotifybe.dto.FilterDto;
 import app.spotify.spotifybe.dto.OrderDto;
 import app.spotify.spotifybe.dto.OrderUserProdDto;
 import app.spotify.spotifybe.exception.BalanceNotEnoughException;
+import app.spotify.spotifybe.exception.BusinessException;
 import app.spotify.spotifybe.model.Account;
 import app.spotify.spotifybe.model.Filter;
 import app.spotify.spotifybe.model.Order;
@@ -142,7 +144,7 @@ public class OrderController {
 
 	@GetMapping("/order/downloadOrderAccounts")
 	public ResponseEntity<Resource> downloadOrderAccounts(@RequestParam("orderId") long orderId,
-			 HttpServletResponse response) throws Exception {
+			 HttpServletResponse response) throws BusinessException, IOException {
 
 		Order o = orderRepo.findById(orderId).orElseThrow(() -> new RuntimeException("Cannot find the requested order."));
 		List<Filter> filters = o.getFilters();
@@ -165,17 +167,17 @@ public class OrderController {
 							o.getProduct().getId());
 					break;
 				default:
-					throw new Exception("The given filter is not correct.");
+					throw new BusinessException("The given filter is not correct.");
 				}
 
 			} else
-				throw new Exception("Something went wrong with your order's filters.");
+				throw new BusinessException("Something went wrong with your order's filters.");
 		} else {
 			accounts = accountRepo.getAllAccountsOfOrder(orderId, o.getQuantity());
 		}
 
 		if (accounts.isEmpty()) {
-			throw new Exception("No accounts were found for your order.");
+			throw new BusinessException("No accounts were found for your order.");
 		} else {
 			for (Account a : accounts) {
 				int soldToUser = accountRepo.findAccountSoldToUser(a.getId(), o.getUser().getId());
