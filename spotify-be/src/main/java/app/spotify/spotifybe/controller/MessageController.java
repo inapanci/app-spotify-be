@@ -18,10 +18,12 @@ import app.spotify.spotifybe.dto.MessageDto;
 import app.spotify.spotifybe.exception.BusinessException;
 import app.spotify.spotifybe.model.Message;
 import app.spotify.spotifybe.model.Ticket;
+import app.spotify.spotifybe.model.User;
 import app.spotify.spotifybe.repository.MessageRepository;
 import app.spotify.spotifybe.repository.TicketRepository;
 import app.spotify.spotifybe.repository.TicketStatusRepository;
 import app.spotify.spotifybe.repository.TransactionStatusRepository;
+import app.spotify.spotifybe.repository.UserRepository;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -36,6 +38,9 @@ public class MessageController {
 	
 	@Autowired
 	TicketStatusRepository tStatusRepo;
+	
+	@Autowired
+	UserRepository userRepo;
 	
 	@GetMapping("/message/getById")
 	public MessageDto getMessageById(@RequestParam("messageId") long mId) {
@@ -72,25 +77,28 @@ public class MessageController {
 	}
 
 	@PostMapping("/message/addNew")
-	public void addNewMessage(@RequestBody Message msg) throws BusinessException {
+	public void addNewMessage(@RequestBody MessageDto msg) throws BusinessException {
 		Message m = new Message();
+		Ticket t = ticketRepo.findById(msg.getTicketId()).orElseThrow(()-> new RuntimeException("Ticket not found."));
+		User u = userRepo.findById(msg.getUserId()).orElseThrow(()-> new RuntimeException("User not found."));
 		m.setDescription(msg.getDescription());
 		m.setCreatedAt(java.sql.Timestamp.valueOf(LocalDateTime.now()));
 		m.setRead(msg.getRead());
-		m.setUser(msg.getUser());
+		m.setUser(u);
+		m.setTicket(t);
 		
-		if(msg.getTicket().getTicketStatus().getDescription().equals("pending")) {
-			Ticket ticket = msg.getTicket();
+		if(t.getTicketStatus().getDescription().equals("pending")) {
+			Ticket ticket = t;
 			ticket.setTicketStatus(tStatusRepo.findByDescription("ongoing"));
 			ticketRepo.save(ticket);
 			m.setTicket(ticket);
 		}
-		try {
+		//try {
 			messageRepo.save(m);
 			
-		} catch (Exception e) {
-			throw new BusinessException("Message could not be posted.");
-		}
+//		} catch (Exception e) {
+//			throw new BusinessException("Message could not be posted.");
+//		}
 		//		/return m;
 	}
 }
