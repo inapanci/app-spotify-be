@@ -29,18 +29,18 @@ public class Filter implements Serializable {
 	private String filterValue;
 
 	//bi-directional many-to-many association to Order
-	@ManyToMany(mappedBy="filters", cascade = {CascadeType.ALL})
-	private List<Order> orders;
+//	@ManyToMany(mappedBy="filters", cascade = {CascadeType.ALL})
+//	private List<Order> orders;
 
 	public Filter() {
 	}
 
-	public Filter(int id, String description, BigDecimal price, List<Order> orders, String filterValue) {
+	public Filter(int id, String description, BigDecimal price, String filterValue) {
 		super();
 		this.id = id;
 		this.description = description;
 		this.price = price;
-		this.orders = orders;
+		//this.orders = orders;
 		this.filterValue = filterValue;
 	}
 
@@ -68,13 +68,13 @@ public class Filter implements Serializable {
 		this.price = price;
 	}
 
-	public List<Order> getOrders() {
-		return this.orders;
-	}
-
-	public void setOrders(List<Order> orders) {
-		this.orders = orders;
-	}
+//	public List<Order> getOrders() {
+//		return this.orders;
+//	}
+//
+//	public void setOrders(List<Order> orders) {
+//		this.orders = orders;
+//	}
 
 	public String getFilterValue() {
 		return filterValue;
@@ -87,7 +87,7 @@ public class Filter implements Serializable {
 	@Override
 	public String toString() {
 		return "Filter [id=" + id + ", description=" + description + ", price=" + price + ", filterValue=" + filterValue
-				+ ", orders=" + orders + "]";
+				+ "]";
 	}
 
 }
