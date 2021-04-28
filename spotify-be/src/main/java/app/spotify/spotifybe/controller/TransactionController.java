@@ -150,11 +150,12 @@ public class TransactionController {
 		t.setDescription(tr.getDescription());
 		t.setTransactionId(tr.getTransactionId());
 		t.setPaymentMethod(tr.getPaymentMethod());
-
+				
 		t.setUser(tr.getUser());
 
 		if (t.getPaymentMethod().getDescription().equals("paypal")
 				|| t.getPaymentMethod().getDescription().equals("paypal")) {
+			t.setTransactionId(tr.getTransactionId());
 			t.setTransactionStatus(transactionStsRepo.findByDescription("pending"));
 		}
 
