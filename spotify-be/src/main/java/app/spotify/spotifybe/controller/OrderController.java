@@ -17,6 +17,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import javax.transaction.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -216,6 +217,7 @@ public class OrderController {
 
 	}
 
+	@Transactional
 	@PostMapping("/order/addNew")
 	public Order addNewOrder(@RequestBody Order order) throws BalanceNotEnoughException {
 		Order o = new Order();
@@ -226,9 +228,13 @@ public class OrderController {
 		o.setUser(order.getUser());
 		o.setValue(order.getValue());
 		o.setFilters(order.getFilters());
-
-		if (order.getUser().getBalance().compareTo(order.getValue()) == 1) { // mduket duhet ==1 //ishte >0
+		
+		User u = o.getUser();
+		
+		if (u.getBalance().compareTo(order.getValue()) > 0) { 
 			orderRepo.save(o);
+			u.setBalance(u.getBalance().subtract(order.getValue()));
+			userRepo.save(u);
 		} else {
 			throw new BalanceNotEnoughException("You do not have enough balance to complete this order.");
 		}

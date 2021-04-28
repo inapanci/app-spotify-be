@@ -7,6 +7,6 @@ import app.spotify.spotifybe.model.TransactionStatus;
 
 public interface TransactionStatusRepository extends JpaRepository<TransactionStatus,Integer>{
 
-	TicketStatus findByDescription(String string);
+	TransactionStatus findByDescription(String string);
 
 }

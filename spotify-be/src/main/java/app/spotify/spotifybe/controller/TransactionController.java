@@ -24,6 +24,7 @@ import app.spotify.spotifybe.model.User;
 import app.spotify.spotifybe.repository.PaymentMethodRepository;
 import app.spotify.spotifybe.repository.TransactionRepository;
 import app.spotify.spotifybe.repository.UserRepository;
+import app.spotify.spotifybe.repository.TransactionStatusRepository;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -38,6 +39,9 @@ public class TransactionController {
 
 	@Autowired
 	UserRepository userRepo;
+
+	@Autowired
+	TransactionStatusRepository transactionStsRepo;
 
 	@GetMapping("/transaction/getAll")
 	public List<Transaction> getAllTransactions() {
@@ -103,28 +107,41 @@ public class TransactionController {
 	public Transaction updateTransactionStatus(@RequestBody Transaction transaction) throws BusinessException {
 		Transaction t = transactionRepo.findById(transaction.getId())
 				.orElseThrow(() -> new RuntimeException("Transaction not found."));
-		t.setTransactionStatus(transaction.getTransactionStatus());
+
 		BigDecimal oldAmount = t.getAmount();
 
 		try {
 			transactionRepo.save(t);
-			User u = null;
-			if (oldAmount != transaction.getAmount()) {
-				u = userRepo.findById(t.getUser().getId()).get();
-				if(u.getBalance()!=null) {
-					u.setBalance(u.getBalance().add(transaction.getAmount()));
-				}else {
-					u.setBalance(transaction.getAmount());
-				}		
+			if (t.getTransactionStatus().getDescription().equals("pending")) {
+				t.setTransactionStatus(transactionStsRepo.findByDescription("completed"));
+				transactionRepo.save(t);
+
+				// User u = null;
+				// if (oldAmount != transaction.getAmount()) {
+				// u = userRepo.findById(t.getUser().getId()).get();
+				// if(u.getBalance()!=null) {
+				// u.setBalance(u.getBalance().add(transaction.getAmount()));
+				// }else {
+				// u.setBalance(transaction.getAmount());
+				// }
+				// }
+				// userRepo.save(u);
+
+				User u = userRepo.findById(t.getUser().getId()).get();
+				if (u.getBalance() != null) {
+					u.setBalance(u.getBalance().add(t.getAmount()));
+				} else {
+					u.setBalance(t.getAmount());
+				}
+				userRepo.save(u);
 			}
-			userRepo.save(u);
 		} catch (Exception e) {
 			throw new BusinessException("Transaction could not be saved.");
 		}
 		return t;
 	}
 
-	@Transactional
+	// @Transactional
 	@PostMapping("/transaction/addFunds")
 	public Transaction addFunds(@RequestBody Transaction tr) throws BusinessException {
 		Transaction t = new Transaction();
@@ -133,18 +150,23 @@ public class TransactionController {
 		t.setDescription(tr.getDescription());
 		t.setTransactionId(tr.getTransactionId());
 		t.setPaymentMethod(tr.getPaymentMethod());
-		t.setTransactionStatus(tr.getTransactionStatus());
+
 		t.setUser(tr.getUser());
+
+		if (t.getPaymentMethod().getDescription().equals("paypal")
+				|| t.getPaymentMethod().getDescription().equals("paypal")) {
+			t.setTransactionStatus(transactionStsRepo.findByDescription("pending"));
+		}
 
 		try {
 			transactionRepo.save(t);
-			User u = userRepo.findById(t.getUser().getId()).get();
-			if(u.getBalance()!=null) {
-				u.setBalance(u.getBalance().add(t.getAmount()));
-			}else {
-				u.setBalance(t.getAmount());
-			}
-			userRepo.save(u);
+//			User u = userRepo.findById(t.getUser().getId()).get();
+//			if(u.getBalance()!=null) {
+//				u.setBalance(u.getBalance().add(t.getAmount()));
+//			}else {
+//				u.setBalance(t.getAmount());
+//			}
+//			userRepo.save(u);
 		} catch (Exception e) {
 			throw new BusinessException("Transaction could not be saved.");
 		}
