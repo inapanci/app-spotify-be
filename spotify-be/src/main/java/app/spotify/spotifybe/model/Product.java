@@ -56,7 +56,10 @@ public class Product implements Serializable {
 	
 	@Column(name="price_per_filter")
 	private BigDecimal pricePerFilter;
-
+	
+	@Column(name="processing_type")
+	private String processingType;
+	
 //	//bi-directional many-to-one association to Account
 //	@OneToMany(mappedBy="product")
 //	private List<Account> accounts;
@@ -78,8 +81,8 @@ public class Product implements Serializable {
 	}
 
 	public Product(int id, Date createdAt, Date deliveryTime, String description, String format, int gate, int maximum,
-			int minimum, BigDecimal price, byte[] productImage, int sort, String title, String warranty, BigDecimal pricePerFilter,
-			 List<CustomProductPrice> customProductPrices //List<Order> orders, List<Account> accounts, ProductStatus productStatus
+			int minimum, BigDecimal price, byte[] productImage, int sort, String title, String warranty, BigDecimal pricePerFilter, String processingType
+			// List<CustomProductPrice> customProductPrices //List<Order> orders, List<Account> accounts, ProductStatus productStatus
 			 ) {
 		super();
 		this.id = id;
@@ -96,6 +99,7 @@ public class Product implements Serializable {
 		this.title = title;
 		this.warranty = warranty;
 		this.pricePerFilter = pricePerFilter;
+		this.processingType = processingType;
 		//this.accounts = accounts;
 		//this.customProductPrices = customProductPrices;
 		//this.orders = orders;
@@ -273,6 +277,18 @@ public class Product implements Serializable {
 //		return order;
 //	}
 
+	public String getProcessingType() {
+		return processingType;
+	}
+
+	public void setProcessingType(String processingType) {
+		this.processingType = processingType;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
 	public BigDecimal getPricePerFilter() {
 		return pricePerFilter;
 	}
@@ -285,17 +301,17 @@ public class Product implements Serializable {
 		return this.productStatus;
 	}
 
+	public void setProductStatus(ProductStatus productStatus) {
+		this.productStatus = productStatus;
+	}
+
 	@Override
 	public String toString() {
 		return "Product [id=" + id + ", createdAt=" + createdAt + ", deliveryTime=" + deliveryTime + ", description="
 				+ description + ", format=" + format + ", gate=" + gate + ", maximum=" + maximum + ", minimum="
 				+ minimum + ", price=" + price + ", productImage=" + Arrays.toString(productImage) + ", sort=" + sort
 				+ ", title=" + title + ", warranty=" + warranty + ", pricePerFilter=" + pricePerFilter
-				+ ", productStatus=" + productStatus + "]";
-	}
-
-	public void setProductStatus(ProductStatus productStatus) {
-		this.productStatus = productStatus;
+				+ ", processingType=" + processingType + ", productStatus=" + productStatus + "]";
 	}
 
 }

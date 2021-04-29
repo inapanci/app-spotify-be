@@ -222,7 +222,7 @@ public class OrderController {
 	public Order addNewOrder(@RequestBody Order order) throws BalanceNotEnoughException {
 		Order o = new Order();
 		o.setOrderDate(java.sql.Timestamp.valueOf(LocalDateTime.now()));
-		o.setOrderStatus(oStatusRepo.findByDescription("ready"));
+		o.setOrderStatus(order.getOrderStatus());
 		o.setProduct(order.getProduct());
 		o.setQuantity(order.getQuantity());
 		o.setUser(order.getUser());
@@ -233,9 +233,12 @@ public class OrderController {
 		
 		if (u.getBalance().compareTo(order.getValue()) > 0) { 
 			orderRepo.save(o);
-			u.setBalance(u.getBalance().subtract(order.getValue()));
-			userRepo.save(u);
-		} else {
+			if (!o.getOrderStatus().getDescription().equals("replacement")) {
+				u.setBalance(u.getBalance().subtract(order.getValue()));
+				userRepo.save(u);
+			}
+		} 
+		else {
 			throw new BalanceNotEnoughException("You do not have enough balance to complete this order.");
 		}
 
