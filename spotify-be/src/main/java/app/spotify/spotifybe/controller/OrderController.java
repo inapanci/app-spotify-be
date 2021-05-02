@@ -65,6 +65,9 @@ public class OrderController {
 	@Autowired
 	FilterRepository filterRepo;
 
+	@Autowired
+	AccountController accountController;
+
 	@GetMapping("/order/getAll")
 	public List<Order> getAllOrders() {
 		return orderRepo.findAll();
@@ -101,7 +104,7 @@ public class OrderController {
 		dto.setValue(o.getValue());
 		List<Filter> filters = o.getFilters();
 		List<FilterDto> dtoList = new ArrayList<>();
-		for(Filter f : filters) {
+		for (Filter f : filters) {
 			FilterDto dtof = new FilterDto();
 			dtof.setDescription(f.getDescription());
 			dtof.setFilterValue(f.getFilterValue());
@@ -136,18 +139,19 @@ public class OrderController {
 		return orderUserProd;
 
 	}
-	
+
 	@GetMapping("/getOrderStatusByDescription")
 	public OrderStatus getByDescription(@RequestParam("descr") String descr) {
 		return oStatusRepo.findByDescription(descr);
-		
+
 	}
 
 	@GetMapping("/order/downloadOrderAccounts")
 	public ResponseEntity<Resource> downloadOrderAccounts(@RequestParam("orderId") long orderId,
-			 HttpServletResponse response) throws BusinessException, IOException {
+			HttpServletResponse response) throws BusinessException, IOException {
 
-		Order o = orderRepo.findById(orderId).orElseThrow(() -> new RuntimeException("Cannot find the requested order."));
+		Order o = orderRepo.findById(orderId)
+				.orElseThrow(() -> new RuntimeException("Cannot find the requested order."));
 		List<Filter> filters = o.getFilters();
 		List<Account> accounts = new ArrayList<>();
 		List<Account> subList = new ArrayList<>();
@@ -157,7 +161,7 @@ public class OrderController {
 				accounts = accountRepo.findByCountryAndSubscriptionTypeAndProductId(filters.get(0).getFilterValue(),
 						filters.get(1).getFilterValue(), o.getProduct().getId());
 			} else if (filters.size() == 1) {
-			
+
 				switch (filters.get(0).getDescription()) {
 				case "country":
 					accounts = accountRepo.findByCountryAndProductId(filters.get(0).getFilterValue(),
@@ -219,7 +223,7 @@ public class OrderController {
 
 	@Transactional
 	@PostMapping("/order/addNew")
-	public Order addNewOrder(@RequestBody Order order) throws BalanceNotEnoughException {
+	public Order addNewOrder(@RequestBody Order order) throws BalanceNotEnoughException, BusinessException {
 		Order o = new Order();
 		o.setOrderDate(java.sql.Timestamp.valueOf(LocalDateTime.now()));
 		o.setOrderStatus(order.getOrderStatus());
@@ -228,18 +232,21 @@ public class OrderController {
 		o.setUser(order.getUser());
 		o.setValue(order.getValue());
 		o.setFilters(order.getFilters());
-		
+
 		User u = o.getUser();
-		
-		if (u.getBalance().compareTo(order.getValue()) > 0) { 
-			orderRepo.save(o);
-			if (!o.getOrderStatus().getDescription().equals("replacement")) {
-				u.setBalance(u.getBalance().subtract(order.getValue()));
-				userRepo.save(u);
+
+		if (accountController.isThereStock(o.getFilters(), o.getProduct().getId()) > 1) {
+			if (u.getBalance().compareTo(order.getValue()) > 0) {
+				orderRepo.save(o);
+				if (!o.getOrderStatus().getDescription().equals("replacement")) {
+					u.setBalance(u.getBalance().subtract(order.getValue()));
+					userRepo.save(u);
+				}
+			} else {
+				throw new BalanceNotEnoughException("You do not have enough balance to complete this order.");
 			}
-		} 
-		else {
-			throw new BalanceNotEnoughException("You do not have enough balance to complete this order.");
+		} else {
+			throw new BalanceNotEnoughException("There is not enough stock for this order.");
 		}
 
 		return o;
