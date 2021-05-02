@@ -21,6 +21,7 @@ import javax.transaction.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -251,6 +252,24 @@ public class OrderController {
 
 		return o;
 
+	}
+	
+	@PutMapping("/order/updateOrder")
+	public void updateOrder(@RequestBody Order order) throws BusinessException {
+		Order o = orderRepo.findById(order.getId()).orElseThrow(()-> new RuntimeException("Order not found."));
+		
+		//try {
+			o.setOrderStatus(order.getOrderStatus());
+			o.setProduct(order.getProduct());
+			o.setFilters(order.getFilters());
+			o.setQuantity(order.getQuantity());
+			o.setUser(order.getUser());
+			o.setValue(order.getValue());
+			orderRepo.save(o);
+//		} catch (Exception e) {
+//			throw new BusinessException("Order could not be updated.");
+//		}
+		
 	}
 
 }
