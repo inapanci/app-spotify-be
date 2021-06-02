@@ -10,18 +10,19 @@ import app.spotify.spotifybe.model.Order;
 public interface OrderRepository extends JpaRepository<Order,Long>{
 
 	@Query("Select sum(o.value) From Order o")
-	public double calculateRevenue();
+	public Double calculateRevenue();
 
-	@Query("Select count(u) From User u Where u.id in (Select o.user.id from Order o)")
-	public int findClients();
+	//@Query("Select count(distinct u) From User u Where u.id in (Select o.user.id from Order o)")
+	@Query("Select count(distinct o.user.id) From Order o")
+	public Integer findClients();
 
 	public List<Order> findByOrderStatusDescription(String descr);
 
 	@Query("Select sum(o.quantity) From Order o Where o.user.id=?1")
-	public int getAccountsPurchased(String uuid);
+	public Integer getAccountsPurchased(String uuid);
 
 	@Query("Select sum(o.value) From Order o Where o.user.id=?1")
-	public double getAmountSpent(String uuid);
+	public Double getAmountSpent(String uuid);
 
 	public List<Order> findByUserId(String uuid);
 

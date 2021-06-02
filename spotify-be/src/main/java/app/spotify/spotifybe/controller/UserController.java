@@ -24,25 +24,24 @@ import java.util.List;
 @RestController
 @RequestMapping("/spotify")
 public class UserController {
-	
+
 	@Autowired
 	UserRepository userRepo;
-	
+
 	@Autowired
 	OrderRepository orderRepo;
-	
+
 	@Autowired
 	TicketRepository ticketRepo;
-	
+
 	@Autowired
 	UserStatusRepository userStatusRepo;
-	
-	
+
 	@GetMapping("/user/getAll")
-	public List<UserDto> getAllUsers(){
+	public List<UserDto> getAllUsers() {
 		List<User> users = userRepo.findAll();
 		List<UserDto> dtoList = new ArrayList<>();
-		for(User u : users) {
+		for (User u : users) {
 			UserDto dto = new UserDto();
 			dto.setId(u.getId());
 			dto.setBalance(u.getBalance());
@@ -58,52 +57,70 @@ public class UserController {
 		}
 		return dtoList;
 	}
-	
+
 	@GetMapping("/user/getById")
 	public User getById(@RequestParam("userId") String uuid) {
-		return userRepo.findById(uuid).orElseThrow(()->new RuntimeException("user not found"));
+		return userRepo.findById(uuid).orElseThrow(() -> new RuntimeException("user not found"));
 	}
 
-	
+	// user dashboard
 	@GetMapping("/user/userDetails")
 	public UserDashboardDto getUserDetails(@RequestParam("userId") String uuid) {
 		UserDashboardDto dto = new UserDashboardDto();
-		User user = userRepo.findById(uuid).orElseThrow(()-> new RuntimeException("user not found"));
-		dto.setAccountsPurchased(orderRepo.getAccountsPurchased(uuid));
-		dto.setAmountSpent(orderRepo.getAmountSpent(uuid));
+		User user = userRepo.findById(uuid).orElseThrow(() -> new RuntimeException("user not found"));
+		if (orderRepo.getAccountsPurchased(uuid) != null) {
+			dto.setAccountsPurchased(orderRepo.getAccountsPurchased(uuid));
+		}
+		if (orderRepo.getAmountSpent(uuid) != null) {
+			dto.setAmountSpent(orderRepo.getAmountSpent(uuid));
+		}
 		dto.setLastSignIn(user.getLastSignIn());
 		dto.setSignUpDate(user.getSignUpDate());
 		dto.setTotalOrders(orderRepo.findByUserId(uuid).size());
-		dto.setTotalTickets(ticketRepo.findByUserId(uuid).size());	
-		dto.setStaffOnline(userRepo.getOnlineStaff());
+		dto.setTotalTickets(ticketRepo.findByUserId(uuid).size());
+		if (userRepo.getOnlineStaff() != null) {
+			dto.setStaffOnline(userRepo.getOnlineStaff());
+		}
+
 		return dto;
 	}
-	
+
 	@PutMapping("/user/update")
 	public User updateUser(@RequestBody User user) throws BusinessException {
-		User u = userRepo.findById(user.getId()).orElseThrow(()-> new RuntimeException("user not found"));
-		u.setEmail(user.getEmail());
-		u.setUsername(user.getUsername());
-		u.setPassword(user.getPassword());
-		u.setBalance(user.getBalance());
-		u.setUserStatus(user.getUserStatus());
-		u.setPaymentMethods(user.getPaymentMethods());
+		User u = userRepo.findById(user.getId()).orElseThrow(() -> new RuntimeException("user not found"));
+		if(user.getEmail()!=null) {
+			u.setEmail(user.getEmail());
+		}
+		if(user.getUsername()!=null) {
+			u.setUsername(user.getUsername());
+		}
+		if(user.getPassword()!=null) {
+			u.setPassword(user.getPassword());
+		}
+		if(user.getBalance()!=null) {
+			u.setBalance(user.getBalance());
+		}
+		if(user.getUserStatus()!=null) {
+			u.setUserStatus(user.getUserStatus());
+		}
+		if(user.getPaymentMethods()!=null) {
+			u.setPaymentMethods(user.getPaymentMethods());
+		}
 		try {
 			userRepo.save(u);
 		} catch (Exception e) {
 			throw new BusinessException("User settings could not be updated.");
 		}
 		return user;
-		
+
 	}
-	
+
 	@PostMapping("/register")
-	public HttpStatus addNewUser(@RequestBody User usr) throws Exception  {
+	public HttpStatus addNewUser(@RequestBody User usr) throws Exception {
 		User u = new User();
 		if (userRepo.findByEmail(usr.getEmail()) != null) {
-			throw new ResponseStatusException(
-			          HttpStatus.BAD_REQUEST, "User already exists");
-			    
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exists");
+
 		}
 		u.setId(usr.getId());
 		u.setUsername(usr.getUsername());
@@ -115,29 +132,26 @@ public class UserController {
 		u.setSignUpDate(java.sql.Timestamp.valueOf(LocalDateTime.now()));
 		u.setUserStatus(userStatusRepo.findById(1).get());
 		userRepo.save(u);
-		return HttpStatus.OK; 
+		return HttpStatus.OK;
 	}
-	
-	@PostMapping("/login")
-	public LoginDto login (@RequestParam(required=true) String email, @RequestParam(required=true) String password) {
 
+	@PostMapping("/login")
+	public LoginDto login(@RequestParam(required = true) String email, @RequestParam(required = true) String password) {
 
 		User user = userRepo.findByEmailAndPassword(email, password);
 		LoginDto loginData = new LoginDto();
-		
+
 		if (user != null) {
-			
+
 			loginData.setEmail(user.getEmail());
 			loginData.setRole(user.getRole());
 			loginData.setUsername(user.getUsername());
 			loginData.setToken(user.getId());
 		} else {
-			throw new ResponseStatusException(
-			          HttpStatus.BAD_REQUEST, "Wrong credentials");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong credentials");
 		}
-		
+
 		return loginData;
 	}
 
-	
 }

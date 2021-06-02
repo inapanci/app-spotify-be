@@ -10,10 +10,10 @@ import app.spotify.spotifybe.model.User;
 public interface UserRepository extends JpaRepository<User,String>{
 
 	@Query("Select sum(u.balance) from User u")
-	public double getAllBalance();
+	public Double getAllBalance();
 
-	@Query("Select count(u) from User u where u.id in (Select s.user.id from Staff s where s.online='1')")
-	public int getOnlineStaff();
+	@Query("Select count(distinct s.user.id) from Staff s where s.online='1'")
+	public Integer getOnlineStaff();
 
 	public User findByEmail(String email);
 	

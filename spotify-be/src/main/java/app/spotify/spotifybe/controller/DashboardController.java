@@ -46,14 +46,25 @@ public class DashboardController {
 	@GetMapping("/dashboard/getAll")
 	public DashboardDto getDashboard() {
 		DashboardDto dash = new DashboardDto();
-		dash.setRevenue(orderRepo.calculateRevenue());
+		if(orderRepo.calculateRevenue()!=null) {
+			dash.setRevenue(orderRepo.calculateRevenue());
+		}else dash.setRevenue(0.00);
+		
+		
 		dash.setNrOfOrders(orderRepo.findAll().size());
 		dash.setNrOfTickets(ticketRepo.findAll().size());
 		dash.setNrOfProducts(productRepo.findAll().size());
 		dash.setNrOfUsers(userRepo.findAll().size());
-		dash.setNrOfClients(orderRepo.findClients());
-		dash.setClientBalance(userRepo.getAllBalance());
-		dash.setConversionRate((dash.getRevenue()/dash.getNrOfClients())*100);
+		if(orderRepo.findClients()!=null && orderRepo.findClients()!=0) {
+			dash.setNrOfClients(orderRepo.findClients());
+			dash.setConversionRate(((double)dash.getNrOfUsers()/dash.getNrOfClients())*100);
+		}
+		else dash.setConversionRate(0);
+		if(userRepo.getAllBalance()!=null) {
+			dash.setClientBalance(userRepo.getAllBalance());
+		}
+	
+		
 		return dash;
 	}
 	

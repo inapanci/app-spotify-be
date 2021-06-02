@@ -7,7 +7,7 @@ public class ProductDto {
 
 	private int id;
 	private Date createdAt;
-	private Date deliveryTime;
+	private String deliveryTime;
 	private String description;
 	private String format;
 	private int gate;
@@ -35,10 +35,10 @@ public class ProductDto {
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
-	public Date getDeliveryTime() {
+	public String getDeliveryTime() {
 		return deliveryTime;
 	}
-	public void setDeliveryTime(Date deliveryTime) {
+	public void setDeliveryTime(String deliveryTime) {
 		this.deliveryTime = deliveryTime;
 	}
 	public String getDescription() {

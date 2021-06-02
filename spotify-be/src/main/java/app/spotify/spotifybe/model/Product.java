@@ -28,9 +28,8 @@ public class Product implements Serializable {
 	@Column(name="created_at")
 	private Date createdAt;
 
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="delivery_time")
-	private Date deliveryTime;
+	private String deliveryTime;
 
 	private String description;
 
@@ -80,7 +79,7 @@ public class Product implements Serializable {
 	public Product() {
 	}
 
-	public Product(int id, Date createdAt, Date deliveryTime, String description, String format, int gate, int maximum,
+	public Product(int id, Date createdAt, String deliveryTime, String description, String format, int gate, int maximum,
 			int minimum, BigDecimal price, byte[] productImage, int sort, String title, String warranty, BigDecimal pricePerFilter, String processingType
 			// List<CustomProductPrice> customProductPrices //List<Order> orders, List<Account> accounts, ProductStatus productStatus
 			 ) {
@@ -122,11 +121,11 @@ public class Product implements Serializable {
 		this.createdAt = createdAt;
 	}
 
-	public Date getDeliveryTime() {
-		return this.deliveryTime;
+	public String getDeliveryTime() {
+		return deliveryTime;
 	}
 
-	public void setDeliveryTime(Date deliveryTime) {
+	public void setDeliveryTime(String deliveryTime) {
 		this.deliveryTime = deliveryTime;
 	}
 

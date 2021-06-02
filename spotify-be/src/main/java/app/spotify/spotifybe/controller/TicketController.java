@@ -37,11 +37,13 @@ public class TicketController {
 		return ticketRepo.findById(ticketId).orElseThrow(() -> new RuntimeException("Ticket not found."));
 	}
 
+	//user
 	@GetMapping("/ticket/getAllOfUser")
 	public List<Ticket> getTicketsOfUser(@RequestParam("userId") String uuid) {
 		return ticketRepo.findByUserId(uuid);
 	}
 	
+	//user
 	@GetMapping("/ticket/getAllOfUserDto")
 	public List<TicketUserDto> getTicketUser(@RequestParam("userId") String uuid){
 		List<Ticket> tickets = ticketRepo.findByUserId(uuid);
@@ -104,6 +106,7 @@ public class TicketController {
 		return tick;
 	}
 
+	//user
 	@PostMapping("/ticket/addNew")
 	public Ticket addNewTicket(@RequestBody Ticket t) throws BusinessException {
 		Ticket tick = new Ticket();
