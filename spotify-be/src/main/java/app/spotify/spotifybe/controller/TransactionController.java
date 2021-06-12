@@ -82,6 +82,7 @@ public class TransactionController {
 		TransactionUserDto dto = new TransactionUserDto();
 
 		if (transactions.isEmpty()) {
+			dto.setUser(userRepo.findById(uuid).get());
 			dto.setUsersPaymentMethods(paymentMethodsRepo.getUsersPaymentMethods(uuid));
 			transacUser.add(dto);
 		} else {
