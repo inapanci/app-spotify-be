@@ -42,6 +42,9 @@ public class User implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "sign_up_date")
 	private Date signUpDate;
+	
+	@Column(name="is_online", length=1)
+	private String online;
 
 	// bi-directional many-to-many association to Account
 //	@ManyToMany
@@ -99,7 +102,7 @@ public class User implements Serializable {
 			String password, String role, Date signUpDate, //List<Account> accounts, //List<Announcement> announcements,
 			//List<CustomProductPrice> customProductPrices, //List<Order> orders,
 			//List<Staff> staffs, //List<Ticket> tickets, //List<Transaction> transactions,, List<Message> messages, List<UserPromotion> userPromotions
-			UserStatus userStatus, List<PaymentMethod> paymentMethods) {
+			UserStatus userStatus, List<PaymentMethod> paymentMethods, String online) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -121,6 +124,7 @@ public class User implements Serializable {
 		//this.userPromotions = userPromotions;
 		this.userStatus = userStatus;
 		this.paymentMethods = paymentMethods;
+		this.online = online;
 	}
 
 	public String getId() {
@@ -275,6 +279,14 @@ public class User implements Serializable {
 		this.paymentMethods = paymentMethods;
 	}
 
+	public String getOnline() {
+		return online;
+	}
+
+	public void setOnline(String online) {
+		this.online = online;
+	}
+
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
@@ -283,8 +295,8 @@ public class User implements Serializable {
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", balance=" + balance + ", email=" + email
 				+ ", lastSignIn=" + lastSignIn + ", notifications=" + notifications + ", password=" + password
-				+ ", role=" + role + ", signUpDate=" + signUpDate + ", userStatus="
-				+ userStatus + ", paymentMethods=" + paymentMethods + "]";
+				+ ", role=" + role + ", signUpDate=" + signUpDate + ", online=" + online + ", userStatus=" + userStatus
+				+ ", paymentMethods=" + paymentMethods + "]";
 	}
 
 }

@@ -27,6 +27,8 @@ public class UserDto {
 	private String userStatus;
 	
 	private List<UserPromotionDto> userPromotions;
+	
+	private String online;
 
 	public String getId() {
 		return id;
@@ -114,6 +116,14 @@ public class UserDto {
 
 	public void setUserStatus(String userStatus) {
 		this.userStatus = userStatus;
+	}
+
+	public String getOnline() {
+		return online;
+	}
+
+	public void setOnline(String online) {
+		this.online = online;
 	}
 		
 }

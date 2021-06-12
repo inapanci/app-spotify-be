@@ -25,7 +25,7 @@ public class Message implements Serializable {
 	@Column(name="description",length=500)
 	private String description;
 
-	@Column(name="is_read", columnDefinition = "char(1)")
+	@Column(name="is_read", columnDefinition = "char(1)", length=1)
 	private String read;
 
 	//bi-directional many-to-one association to Ticket

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -89,7 +90,7 @@ public class MessageController {
 		
 		if(t.getTicketStatus().getDescription().equals("pending")) {
 			Ticket ticket = t;
-			ticket.setTicketStatus(tStatusRepo.findByDescription("ongoing"));
+			ticket.setTicketStatus(tStatusRepo.findByDescription("opened"));
 			ticketRepo.save(ticket);
 			m.setTicket(ticket);
 		}
@@ -101,4 +102,17 @@ public class MessageController {
 //		}
 		//		/return m;
 	}
+	
+//	@PutMapping("message/setIsRead")
+//	public void setIsRead(@RequestParam("ticketId") Integer ticketId) {
+//		Ticket ticket = ticketRepo.findById(ticketId).orElseThrow(()-> new RuntimeException("Wrong ticket chosen."));
+//		List<Message> messagesOfTicket = messageRepo.findByTicketId(ticketId);
+//		
+//		for(Message m : messagesOfTicket) {
+//			if(!m.getRead().equals("1")) {
+//				m.setRead("1");
+//				messageRepo.save(m);
+//			}
+//		}
+//	}
 }

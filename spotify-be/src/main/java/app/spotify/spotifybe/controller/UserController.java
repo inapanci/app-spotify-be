@@ -147,6 +147,9 @@ public class UserController {
 			loginData.setRole(user.getRole());
 			loginData.setUsername(user.getUsername());
 			loginData.setToken(user.getId());
+			
+			user.setLastSignIn(java.sql.Timestamp.valueOf(LocalDateTime.now()));
+			user.setOnline("1");
 		} else {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong credentials");
 		}
