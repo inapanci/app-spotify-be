@@ -37,6 +37,7 @@ public class UserController {
 	@Autowired
 	UserStatusRepository userStatusRepo;
 
+	//admin
 	@GetMapping("/user/getAll")
 	public List<UserDto> getAllUsers() {
 		List<User> users = userRepo.findAll();
@@ -58,12 +59,13 @@ public class UserController {
 		return dtoList;
 	}
 
+	//admin + user
 	@GetMapping("/user/getById")
 	public User getById(@RequestParam("userId") String uuid) {
 		return userRepo.findById(uuid).orElseThrow(() -> new RuntimeException("user not found"));
 	}
 
-	// user dashboard
+	//admin + user
 	@GetMapping("/user/userDetails")
 	public UserDashboardDto getUserDetails(@RequestParam("userId") String uuid) {
 		UserDashboardDto dto = new UserDashboardDto();
@@ -85,6 +87,7 @@ public class UserController {
 		return dto;
 	}
 
+	//admin + user
 	@PutMapping("/user/update")
 	public User updateUser(@RequestBody User user) throws BusinessException {
 		User u = userRepo.findById(user.getId()).orElseThrow(() -> new RuntimeException("user not found"));

@@ -56,6 +56,7 @@ public class MessageController {
 		return dto;
 	}
 	
+	//user
 	@GetMapping("/message/getByTicket")
 	public List<MessageDto> getMessageByTicket(@RequestParam("ticketId") int ticketId) {
 		List<Message> msgs = messageRepo.findByTicketId(ticketId);
@@ -77,6 +78,7 @@ public class MessageController {
 		
 	}
 
+	//admin + users
 	@PostMapping("/message/addNew")
 	public void addNewMessage(@RequestBody MessageDto msg) throws BusinessException {
 		Message m = new Message();

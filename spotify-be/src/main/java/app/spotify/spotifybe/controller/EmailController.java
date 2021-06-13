@@ -17,6 +17,9 @@ public class EmailController {
 	@Autowired
 	EmailRepository emailRepo;
 	
+	
+	//admin(?)
+	//get emailin latest (aktiv) te adminit per paypalin
 	@GetMapping("/email/getLatest")
 	public Email getLatestEmail() {
 		return emailRepo.findIdMax();

@@ -27,6 +27,7 @@ public class AnnouncementController {
 	@Autowired
 	AnnouncementRepository announcementRepo;
 	
+	//admin + user
 	@GetMapping("/announcement/getAll")
 	public List<Announcement> getAll(){
 		List<Announcement> list = announcementRepo.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
@@ -37,6 +38,7 @@ public class AnnouncementController {
 		
 	}
 	
+	//admin
 	@PostMapping("/announcement/addNew")
 	public AnnouncementDto addNew(@RequestBody Announcement a) {
 		Announcement an = new Announcement();
@@ -52,6 +54,7 @@ public class AnnouncementController {
 		return dto;
 	}
 	
+	//admin
 	@DeleteMapping("/announcement/deleteAnnouncement")
 	public void deleteAnnouncement(@RequestBody Announcement a) {
 		Announcement an = announcementRepo.findById(a.getId()).orElseThrow(()-> new RuntimeException("announcement not found."));

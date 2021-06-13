@@ -43,6 +43,7 @@ public class TransactionController {
 	@Autowired
 	TransactionStatusRepository transactionStsRepo;
 
+	//admin
 	@GetMapping("/transaction/getAll")
 	public List<Transaction> getAllTransactions() {
 		return transactionRepo.findAll();
@@ -54,6 +55,7 @@ public class TransactionController {
 	}
 
 	// method gets all transactions but needs only some information for user
+	//admin
 	@GetMapping("/transaction/getTransactionUser")
 	public List<TransactionUserDto> getAllTransactionUserInfo() {
 		List<Transaction> transactions = transactionRepo.findAll();
@@ -75,6 +77,7 @@ public class TransactionController {
 		return transacUser;
 	}
 
+	//user
 	@GetMapping("/transaction/usersTransactions")
 	public List<TransactionUserDto> getUsersTransactions(@RequestParam("uuid") String uuid) {
 		List<Transaction> transactions = transactionRepo.findByUserId(uuid);
@@ -103,6 +106,7 @@ public class TransactionController {
 		return transacUser;
 	}
 
+	//admin
 	@Transactional
 	@PutMapping("/transaction/updateTransaction")
 	public Transaction updateTransactionStatus(@RequestBody Transaction transaction) throws BusinessException {
@@ -145,6 +149,7 @@ public class TransactionController {
 		return t;
 	}
 
+	//admin
 	@Transactional
 	@PostMapping("/transaction/addFunds")
 	public Transaction addFunds(@RequestBody Transaction tr) throws BusinessException {

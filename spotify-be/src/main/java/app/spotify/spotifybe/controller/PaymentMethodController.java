@@ -34,9 +34,10 @@ public class PaymentMethodController {
 		return paymentMethRepo.findById(pmId).orElseThrow(()-> new RuntimeException("Payment method could not be found"));
 	}
 	
+	//admin
 	@PutMapping("/paymentMethod/updateSettings")
 	public List<PaymentMethod> updatePmSettings(@RequestBody PaymentMethod[] pm) throws NotManagedException {
-		List<PaymentMethod> list = new ArrayList<>(); //= paymentMethRepo.findById(pm.getId()).orElseThrow(()-> new RuntimeException("payment method not found"));
+		List<PaymentMethod> list = new ArrayList<>(); 
 
 		try {
 			for(PaymentMethod p : pm) {

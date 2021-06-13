@@ -42,7 +42,7 @@ public class DashboardController {
 	@Autowired
 	MessageRepository messageRepo;
 	
-	
+	//admin
 	@GetMapping("/dashboard/getAll")
 	public DashboardDto getDashboard() {
 		DashboardDto dash = new DashboardDto();
@@ -68,6 +68,7 @@ public class DashboardController {
 		return dash;
 	}
 	
+	//admin
 	@GetMapping("/dashboard/getOrdersInDash")
 	public OrderDashboardDto getOrderDashboard() {
 		OrderDashboardDto dto = new OrderDashboardDto();
@@ -79,6 +80,7 @@ public class DashboardController {
 		return dto;
 	}
 	
+	//admin
 	@GetMapping("/dashboard/getTicketsInDash")
 	public TicketDashboardDto getTicketsDashboard() {
 		TicketDashboardDto dto = new TicketDashboardDto();
@@ -90,6 +92,7 @@ public class DashboardController {
 		return dto;
 	}
 	
+	//user
 	@GetMapping("/dashboard/usersOrders")
 	public OrderDashboardDto getUsersOrdersForDashboard(@RequestParam("usersId") String uuid) {
 		OrderDashboardDto dto = new OrderDashboardDto();
@@ -101,6 +104,7 @@ public class DashboardController {
 		return dto;
 	}
 	
+	//user
 	@GetMapping("/dashboard/usersTickets")
 	public TicketDashboardDto getUsersTicketsForDashboard(@RequestParam("usersId") String uuid) {
 		TicketDashboardDto dto = new TicketDashboardDto();

@@ -46,11 +46,13 @@ public class ProductController {
 	@Autowired
 	FilterRepository filterRepo;
 
+	//admin + user
 	@GetMapping("/product/getAll")
 	public List<Product> getAllProducts() {
 		return productRepo.findAll();
 	}
 
+	//admin
 	@GetMapping("/product/allProductsAndAccounts")
 	public List<ProductAccountsDto> getProductsAndNrAccounts() {
 		List<Product> products = productRepo.findAll();
@@ -78,11 +80,13 @@ public class ProductController {
 		return prodAccounts;
 	}
 
+	//admin
 	@GetMapping("/product/getById")
 	public Product getProductById(@RequestParam("prodId") int prodId) { 
 		return productRepo.findById(prodId).orElseThrow(() -> new RuntimeException("product not found."));
 	}
 
+	//user
 	@GetMapping("/product/getAccountProductInfo")
 	public AccountProductDto getAccountProductInfo(@RequestParam("prodId") int prodId,
 			@RequestBody(required = false) List<Filter> filters) throws BusinessException {
@@ -163,6 +167,7 @@ public class ProductController {
 		return dto;
 	}
 
+	//admin
 	@PostMapping(value = "/product/addProduct", consumes = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.MULTIPART_FORM_DATA_VALUE })
 	public Product addNewProduct(@RequestPart("productInfo") String productInfo,
@@ -187,6 +192,7 @@ public class ProductController {
 		return product;
 	}
 
+	//admin
 	@PutMapping(value = "/product/updateProduct", consumes = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.MULTIPART_FORM_DATA_VALUE })
 	public Product updateProduct(@RequestPart(name = "productInfo", required = false) String productInfo,

@@ -20,6 +20,7 @@ public class UserPromotionController {
 	@Autowired
 	UserPromotionRepository userPromoRepo;
 	
+	//
 	@GetMapping("/spotify/getUsersPromo")
 	public List<UserPromotion> getAllUsersPromo(@RequestParam("userId") String uuid) {
 		return userPromoRepo.findByUserId(uuid);

@@ -27,11 +27,13 @@ public class TicketController {
 	@Autowired
 	TicketRepository ticketRepo;
 
+	//admin
 	@GetMapping("/ticket/getAll")
 	public List<Ticket> getAllTickets() {
 		return ticketRepo.findAll();
 	}
 
+	//admin
 	@GetMapping("/ticket/getById")
 	public Ticket getTicketById(@RequestParam("ticketId") int ticketId) {
 		return ticketRepo.findById(ticketId).orElseThrow(() -> new RuntimeException("Ticket not found."));
@@ -62,6 +64,7 @@ public class TicketController {
 		return ticketUser;
 	}
 
+	//user
 	@GetMapping("/ticket/getPendingOfUser")
 	public List<Ticket> getPendingTicketsOfUser(@RequestParam("userId") String uuid) {
 		return ticketRepo.findPendingOfUser(uuid);
@@ -93,6 +96,7 @@ public class TicketController {
 		return ticketUser;
 	}
 
+	//admin
 	@PutMapping("/ticket/updateTicket")
 	public Ticket updateTicketStatus(@RequestBody Ticket t) throws BusinessException {
 		Ticket tick = ticketRepo.findById(t.getId()).orElseThrow(() -> new RuntimeException("ticket not found."));

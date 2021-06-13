@@ -69,11 +69,13 @@ public class OrderController {
 	@Autowired
 	AccountController accountController;
 
+	//admin
 	@GetMapping("/order/getAll")
 	public List<Order> getAllOrders() {
 		return orderRepo.findAll();
 	}
 
+	//admin
 	@GetMapping("/order/getAllDto")
 	public List<OrderUserProdDto> getAllDto() {
 		List<Order> orders = orderRepo.findAll();
@@ -94,6 +96,7 @@ public class OrderController {
 		return orderUserProd;
 	}
 
+	//admin
 	@GetMapping("/order/getById")
 	public OrderDto getOrderById(@RequestParam("orderId") long orId) {
 		Order o = orderRepo.findById(orId).orElseThrow(() -> new RuntimeException("Cannot find the requested order."));
@@ -119,6 +122,7 @@ public class OrderController {
 		return dto;
 	}
 
+	//user
 	@GetMapping("/order/getAllOfUser")
 	public List<OrderUserProdDto> getAllOrdersOfUser(@RequestParam(name = "uuid") String uuid) {
 		User user = userRepo.findById(uuid).orElseThrow(() -> new RuntimeException("User not found."));
@@ -147,6 +151,7 @@ public class OrderController {
 
 	}
 
+	//user
 	@GetMapping("/order/downloadOrderAccounts")
 	public ResponseEntity<Resource> downloadOrderAccounts(@RequestParam("orderId") long orderId,
 			HttpServletResponse response) throws BusinessException, IOException {
@@ -222,6 +227,7 @@ public class OrderController {
 
 	}
 
+	//user
 	@Transactional
 	@PostMapping("/order/addNew")
 	public Order addNewOrder(@RequestBody Order order) throws BalanceNotEnoughException, BusinessException {
@@ -254,6 +260,7 @@ public class OrderController {
 
 	}
 	
+	//admin
 	@PutMapping("/order/updateOrder")
 	public void updateOrder(@RequestBody Order order) throws BusinessException {
 		Order o = orderRepo.findById(order.getId()).orElseThrow(()-> new RuntimeException("Order not found."));

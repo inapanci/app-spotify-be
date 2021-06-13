@@ -23,11 +23,13 @@ public class CustomProductPriceController {
 	@Autowired
 	CustomProductPriceRepository cppRepo;
 	
+	//admin
 	@GetMapping("/customProductPrice/getAll")
 	public List<CustomProductPrice> getAllCustomPrices(){
 		return cppRepo.findAll();
 	}
 	
+	//admin 
 	@PostMapping("/customProductPrice/postNew")
 	public CustomProductPrice postNewCustomPrice(@RequestBody CustomProductPrice customPrice) {
 		CustomProductPrice c =  new CustomProductPrice();
