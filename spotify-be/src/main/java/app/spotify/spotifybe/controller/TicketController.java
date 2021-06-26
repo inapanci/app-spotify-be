@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import app.spotify.spotifybe.dto.TicketDto;
 import app.spotify.spotifybe.dto.TicketUserDto;
 import app.spotify.spotifybe.exception.BusinessException;
 import app.spotify.spotifybe.model.Ticket;
 import app.spotify.spotifybe.repository.TicketRepository;
+import app.spotify.spotifybe.repository.UserRepository;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -26,6 +28,9 @@ public class TicketController {
 
 	@Autowired
 	TicketRepository ticketRepo;
+	
+	@Autowired
+	UserRepository userRepo;
 
 	//admin
 	@GetMapping("/ticket/getAll")
@@ -126,6 +131,16 @@ public class TicketController {
 			throw new BusinessException("Ticket could not be saved.");
 		}
 		return tick;
+	}
+	
+	//user
+	@GetMapping("/ticket/ticketStatsInfo")
+	public TicketDto ticketStatsInfo() {
+		TicketDto dto = new TicketDto();
+		dto.setPriority("No");
+		dto.setInQueue(ticketRepo.findByTicketStatusDescription("pending").size());
+		dto.setSupportOnline(userRepo.getOnlineStaff());
+		return dto;
 	}
 
 }
