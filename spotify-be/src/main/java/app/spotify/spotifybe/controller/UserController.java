@@ -92,13 +92,13 @@ public class UserController {
 	@PutMapping("/user/update")
 	public User updateUser(@RequestBody User user) throws BusinessException {
 		User u = userRepo.findById(user.getId()).orElseThrow(() -> new RuntimeException("user not found"));
-		if(user.getEmail()!=null) {
+		if(user.getEmail()!=null && !user.getEmail().equals("")) {
 			u.setEmail(user.getEmail());
 		}
-		if(user.getUsername()!=null) {
+		if(user.getUsername()!=null && !user.getUsername().equals("")) {
 			u.setUsername(user.getUsername());
 		}
-		if(user.getPassword()!=null) {
+		if(user.getPassword()!=null && !user.getPassword().equals("")) {
 			u.setPassword(user.getPassword());
 		}
 		if(user.getBalance()!=null) {
@@ -152,8 +152,7 @@ public class UserController {
 			loginData.setRole(user.getRole());
 			loginData.setUsername(user.getUsername());
 			loginData.setToken(user.getId());
-			
-			user.setLastSignIn(java.sql.Timestamp.valueOf(LocalDateTime.now()));
+
 			user.setOnline("1");
 			userRepo.save(user);
 		} else {
@@ -163,4 +162,12 @@ public class UserController {
 		return loginData;
 	}
 
+	@PostMapping("/logout")
+	public void logout(@RequestParam String uuid) {
+		User user = userRepo.findById(uuid).orElseThrow(()->new RuntimeException("User not found."));
+		user.setLastSignIn(java.sql.Timestamp.valueOf(LocalDateTime.now()));
+		user.setOnline("0");
+		userRepo.save(user);
+	}
+	
 }

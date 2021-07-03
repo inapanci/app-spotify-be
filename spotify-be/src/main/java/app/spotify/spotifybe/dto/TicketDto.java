@@ -15,8 +15,11 @@ public class TicketDto {
 
 	private String title;
 	private Date updatedAt;
-	private List<Message> messages;
+	private List<MessageDto> messages;
 	private TicketStatus ticketStatus;
+	private Integer inQueue;
+	private Integer supportOnline;
+	private String priority;
 	//private UserDto user;
 	
 	
@@ -50,10 +53,10 @@ public class TicketDto {
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
 	}
-	public List<Message> getMessages() {
+	public List<MessageDto> getMessages() {
 		return messages;
 	}
-	public void setMessages(List<Message> messages) {
+	public void setMessages(List<MessageDto> messages) {
 		this.messages = messages;
 	}
 	public TicketStatus getTicketStatus() {
@@ -61,6 +64,24 @@ public class TicketDto {
 	}
 	public void setTicketStatus(TicketStatus ticketStatus) {
 		this.ticketStatus = ticketStatus;
+	}
+	public Integer getInQueue() {
+		return inQueue;
+	}
+	public void setInQueue(Integer inQueue) {
+		this.inQueue = inQueue;
+	}
+	public Integer getSupportOnline() {
+		return supportOnline;
+	}
+	public void setSupportOnline(Integer supportOnline) {
+		this.supportOnline = supportOnline;
+	}
+	public String getPriority() {
+		return priority;
+	}
+	public void setPriority(String priority) {
+		this.priority = priority;
 	}
 
 }

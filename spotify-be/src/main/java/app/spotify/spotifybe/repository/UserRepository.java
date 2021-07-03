@@ -12,7 +12,7 @@ public interface UserRepository extends JpaRepository<User,String>{
 	@Query("Select sum(u.balance) from User u")
 	public Double getAllBalance();
 
-	@Query("Select count(distinct s.user.id) from Staff s where s.online='1'")
+	@Query("Select count(u.id) from User u where u.online='1' and u.role='admin'")
 	public Integer getOnlineStaff();
 
 	public User findByEmail(String email);
