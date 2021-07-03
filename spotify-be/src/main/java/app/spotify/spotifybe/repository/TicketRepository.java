@@ -19,4 +19,6 @@ public interface TicketRepository extends JpaRepository<Ticket,Integer>{
 
 	List<Ticket> findByUserIdAndTicketStatusDescription(String uuid, String descr);
 
+	List<Ticket> findByUserIdAndTicketStatusDescriptionNotLike(String uuid, String descr);
+
 }

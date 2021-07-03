@@ -80,6 +80,7 @@ public class UserController {
 		dto.setSignUpDate(user.getSignUpDate());
 		dto.setTotalOrders(orderRepo.findByUserId(uuid).size());
 		dto.setTotalTickets(ticketRepo.findByUserId(uuid).size());
+		dto.setBalance(user.getBalance().doubleValue());
 		if (userRepo.getOnlineStaff() != null) {
 			dto.setStaffOnline(userRepo.getOnlineStaff());
 		}
@@ -134,6 +135,7 @@ public class UserController {
 		u.setNotifications(usr.getNotifications());
 		u.setSignUpDate(java.sql.Timestamp.valueOf(LocalDateTime.now()));
 		u.setUserStatus(userStatusRepo.findById(1).get());
+		u.setOnline("0");
 		userRepo.save(u);
 		return HttpStatus.OK;
 	}
@@ -153,6 +155,7 @@ public class UserController {
 			
 			user.setLastSignIn(java.sql.Timestamp.valueOf(LocalDateTime.now()));
 			user.setOnline("1");
+			userRepo.save(user);
 		} else {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong credentials");
 		}

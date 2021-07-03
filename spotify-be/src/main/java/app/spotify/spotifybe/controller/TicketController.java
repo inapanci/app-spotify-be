@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.spotify.spotifybe.model.Message;
+import app.spotify.spotifybe.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +28,9 @@ public class TicketController {
 
 	@Autowired
 	TicketRepository ticketRepo;
+
+	@Autowired
+	MessageRepository messageRepository;
 
 	//admin
 	@GetMapping("/ticket/getAll")
@@ -113,6 +118,10 @@ public class TicketController {
 	//user
 	@PostMapping("/ticket/addNew")
 	public Ticket addNewTicket(@RequestBody Ticket t) throws BusinessException {
+		List<Ticket> existingTickets = ticketRepo.findByUserIdAndTicketStatusDescriptionNotLike(t.getUser().getId(),"closed");
+		if (existingTickets.size() >= 5) {
+			throw new BusinessException("Ticket limit for user exceeded");
+		}
 		Ticket tick = new Ticket();
 		tick.setCreatedAt(java.sql.Timestamp.valueOf(LocalDateTime.now()));
 		tick.setNotes(t.getNotes());
@@ -122,6 +131,13 @@ public class TicketController {
 		tick.setUser(t.getUser());
 		try {
 			ticketRepo.save(tick);
+			Message newMessage = new Message();
+			newMessage.setDescription(t.getNotes());
+			newMessage.setCreatedAt(tick.getCreatedAt());
+			newMessage.setUser(tick.getUser());
+			newMessage.setTicket(tick);
+			newMessage.setRead("0");
+			messageRepository.save(newMessage);
 		} catch (Exception e) {
 			throw new BusinessException("Ticket could not be saved.");
 		}
