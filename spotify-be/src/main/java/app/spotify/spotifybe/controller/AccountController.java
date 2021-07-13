@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +18,7 @@ import app.spotify.spotifybe.exception.BusinessException;
 import app.spotify.spotifybe.importer.FileReader;
 import app.spotify.spotifybe.model.Account;
 import app.spotify.spotifybe.model.Filter;
+import app.spotify.spotifybe.model.Product;
 import app.spotify.spotifybe.repository.AccountRepository;
 
 @CrossOrigin(origins = "*")
@@ -37,23 +39,6 @@ public class AccountController {
 		Account a = accountRepo.findById(id).orElseThrow(() -> new RuntimeException("Account could not be found."));
 		return a;
 	}
-
-//	@PostMapping("/account/addNew")
-//	public Account addNewAccount(@RequestBody Account a){
-//		Account account = new Account();
-//		account.setAddress(a.getAddress());
-//		account.setCountry(a.getCountry());
-//		account.setCredentials(a.getCredentials());
-//		account.setExpire(a.getExpire());
-//		account.setExtra(a.getExtra());
-//		account.setInvites(a.getInvites());
-//		account.setInviteToken(a.getInviteToken());
-//		account.setSold(a.getSold());
-//		account.setSubscriptionType(a.getSubscriptionType());
-//		account.setProduct(a.getProduct());
-//		accountRepo.save(account);
-//		return account;
-//	}
 
 	//admin
 	@PostMapping("/account/upload")
@@ -101,5 +86,13 @@ public class AccountController {
 		}
 		return stock;
 	
+	}
+	
+	@DeleteMapping("/account/delete")
+	public void deleteAccountsByProduct(@RequestParam("productId") Integer productId) {
+		List<Account> productAccounts = accountRepo.findByProductId(productId);
+		for(Account a : productAccounts) {
+			accountRepo.delete(a);
+		}
 	}
 }

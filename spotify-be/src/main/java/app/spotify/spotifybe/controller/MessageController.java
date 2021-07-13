@@ -105,16 +105,17 @@ public class MessageController {
 		//		/return m;
 	}
 	
-//	@PutMapping("message/setIsRead")
-//	public void setIsRead(@RequestParam("ticketId") Integer ticketId) {
-//		Ticket ticket = ticketRepo.findById(ticketId).orElseThrow(()-> new RuntimeException("Wrong ticket chosen."));
-//		List<Message> messagesOfTicket = messageRepo.findByTicketId(ticketId);
-//		
-//		for(Message m : messagesOfTicket) {
-//			if(!m.getRead().equals("1")) {
-//				m.setRead("1");
-//				messageRepo.save(m);
-//			}
-//		}
-//	}
+	//admin+user
+	@PutMapping("message/setIsRead")
+	public void setIsRead(@RequestParam("ticketId") Integer ticketId) {
+		Ticket ticket = ticketRepo.findById(ticketId).orElseThrow(()-> new RuntimeException("Wrong ticket chosen."));
+		List<Message> messagesOfTicket = messageRepo.findByTicketId(ticketId);
+		
+		for(Message m : messagesOfTicket) {
+			if(!m.getRead().equals("1")) {
+				m.setRead("1");
+				messageRepo.save(m);
+			}
+		}
+	}
 }

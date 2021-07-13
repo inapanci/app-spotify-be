@@ -156,52 +156,15 @@ public class OrderController {
 	public ResponseEntity<Resource> downloadOrderAccounts(@RequestParam("orderId") long orderId,
 			HttpServletResponse response) throws BusinessException, IOException {
 
+		List<Account> accounts = this.getOrderAccounts(orderId);
 		Order o = orderRepo.findById(orderId)
 				.orElseThrow(() -> new RuntimeException("Cannot find the requested order."));
-		List<Filter> filters = o.getFilters();
-		List<Account> accounts = new ArrayList<>();
-		List<Account> subList = new ArrayList<>();
-		// apply quantity to accounts list dhe check sa her jan shit
-		if (filters != null && !filters.isEmpty()) {
-			if (filters.size() == 2) {
-				accounts = accountRepo.findByCountryAndSubscriptionTypeAndProductId(filters.get(0).getFilterValue(),
-						filters.get(1).getFilterValue(), o.getProduct().getId());
-			} else if (filters.size() == 1) {
 
-				switch (filters.get(0).getDescription()) {
-				case "country":
-					accounts = accountRepo.findByCountryAndProductId(filters.get(0).getFilterValue(),
-							o.getProduct().getId());
-					break;
-				case "subscription":
-					accounts = accountRepo.findBySubscriptionTypeAndProductId(filters.get(0).getFilterValue(),
-							o.getProduct().getId());
-					break;
-				default:
-					throw new BusinessException("The given filter is not correct.");
-				}
-
-			} else
-				throw new BusinessException("Something went wrong with your order's filters.");
-		} else {
-			accounts = accountRepo.getAllAccountsOfOrder(orderId, o.getQuantity());
-		}
-
-		if (accounts.isEmpty()) {
-			throw new BusinessException("No accounts were found for your order.");
-		} else {
-			for (Account a : accounts) {
-				int soldToUser = accountRepo.findAccountSoldToUser(a.getId(), o.getUser().getId());
-				if (a.getSold() < 2 && soldToUser != 1 && subList.size() < o.getQuantity()) {
-					subList.add(a);
-				}
-			}
-		}
 		File file = new File("files/accounts" + orderId + ".txt"); // new File("/some/absolute/path/myfile.txt");
 		FileWriter fw = new FileWriter(file);
 		PrintWriter pw = new PrintWriter(fw);
 
-		for (Account a : subList) {
+		for (Account a : accounts) {
 			String newline = "";
 			newline += a.getCredentials() != null ? a.getCredentials() + " | " : "";
 			newline += a.getSubscriptionType() != null ? a.getSubscriptionType() + " | " : "";
@@ -220,7 +183,10 @@ public class OrderController {
 		if (!resource.exists()) {
 			throw new FileNotFoundException("File not found.");
 		}
-
+		
+		o.setOrderStatus(oStatusRepo.findByDescription("completed"));
+		orderRepo.save(o);
+		
 		return ResponseEntity.ok()
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
 				.contentType(MediaType.APPLICATION_OCTET_STREAM).body(resource);
@@ -255,7 +221,13 @@ public class OrderController {
 		} else {
 			throw new BalanceNotEnoughException("There is not enough stock for this order.");
 		}
-
+		
+		List<Account> accounts = this.getOrderAccounts(o.getId());
+		for(Account a : accounts) {
+			a.setSold(a.getSold()+1);
+			accountRepo.save(a);
+		}
+		
 		return o;
 
 	}
@@ -278,5 +250,59 @@ public class OrderController {
 //		}
 		
 	}
+	
+	@GetMapping("/order/accounts")
+	public List<Account> getOrderAccounts(@RequestParam("orderId") long orderId) throws BusinessException{
+		Order o = orderRepo.findById(orderId)
+				.orElseThrow(() -> new RuntimeException("Cannot find the requested order."));
+		List<Filter> filters = o.getFilters();
+		List<Account> accounts = new ArrayList<>();
+		List<Account> subList = new ArrayList<>();
+		// apply quantity to accounts list dhe check sa her jan shit
+		if (filters != null && !filters.isEmpty()) {
+			if (filters.size() == 2) {
+				accounts = accountRepo.findByCountryAndSubscriptionTypeAndProductId(filters.get(0).getFilterValue(),
+						filters.get(1).getFilterValue(), o.getProduct().getId());
+			} else if (filters.size() == 1) {
+
+				switch (filters.get(0).getDescription()) {
+				case "country":
+					accounts = accountRepo.findByCountryAndProductId(filters.get(0).getFilterValue(),
+							o.getProduct().getId());
+					break;
+				case "subscription":
+					accounts = accountRepo.findBySubscriptionTypeAndProductId(filters.get(0).getFilterValue(),
+							o.getProduct().getId());
+					break;
+				default:
+					throw new BusinessException("The given filter is not correct.");
+				}
+
+			} else
+				throw new BusinessException("Something went wrong with your order's filters.");
+		} else {
+			accounts = accountRepo.getAllSpotifyFreeAccountsOfOrder(orderId, o.getQuantity());
+			while(accounts.size()<=o.getQuantity()) {
+				List<Account> extra = accountRepo.getAllAccountsOfOrder(orderId, o.getQuantity());
+				for(Account e : extra) {
+					accounts.add(e);
+				}
+			}
+		}
+
+		if (accounts.isEmpty()) {
+			throw new BusinessException("No accounts were found for your order.");
+		} else {
+			for (Account a : accounts) {
+				int soldToUser = accountRepo.findAccountSoldToUser(a.getId(), o.getUser().getId());
+				if (a.getSold() < 2 && soldToUser != 1 && subList.size() < o.getQuantity() && a.getSold() <= a.getProduct().getGate()) {
+					subList.add(a);
+				}
+			}
+		}
+		
+		return subList;
+	}
+	
 
 }

@@ -6,6 +6,7 @@ import app.spotify.spotifybe.dto.UserDto;
 import app.spotify.spotifybe.exception.BusinessException;
 import app.spotify.spotifybe.model.User;
 import app.spotify.spotifybe.repository.OrderRepository;
+import app.spotify.spotifybe.repository.PaymentMethodRepository;
 import app.spotify.spotifybe.repository.TicketRepository;
 import app.spotify.spotifybe.repository.UserRepository;
 import app.spotify.spotifybe.repository.UserStatusRepository;
@@ -36,6 +37,9 @@ public class UserController {
 
 	@Autowired
 	UserStatusRepository userStatusRepo;
+	
+	@Autowired
+	PaymentMethodRepository paymentMethodRepo;
 
 	//admin
 	@GetMapping("/user/getAll")
@@ -136,6 +140,8 @@ public class UserController {
 		u.setSignUpDate(java.sql.Timestamp.valueOf(LocalDateTime.now()));
 		u.setUserStatus(userStatusRepo.findById(1).get());
 		u.setOnline("0");
+		u.setNotifications("1");
+		u.setPaymentMethods(paymentMethodRepo.findByDescription("coinbase"));
 		userRepo.save(u);
 		return HttpStatus.OK;
 	}

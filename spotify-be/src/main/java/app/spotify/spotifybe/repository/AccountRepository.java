@@ -23,6 +23,9 @@ public interface AccountRepository extends JpaRepository<Account, Long>{
 
 	@Query(value="SELECT a.* FROM spotify.accounts a where a.product_id in (select o.product_id from spotify.orders o where o.id=?1) limit ?2", nativeQuery=true)
 	public List<Account> getAllAccountsOfOrder(long orderId, int quantity);
+	
+	@Query(value="SELECT a.* FROM spotify.accounts a where a.subscription_type='Spotify Free' and a.product_id in (select o.product_id from spotify.orders o where o.id=?1) limit ?2", nativeQuery=true)
+	public List<Account> getAllSpotifyFreeAccountsOfOrder(long orderId, int quantity);
 
 	public List<Account> findByCountryAndSubscriptionTypeAndProductId(String country, String subscription, Integer productId);
 

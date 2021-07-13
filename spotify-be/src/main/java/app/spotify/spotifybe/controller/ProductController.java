@@ -110,60 +110,8 @@ public class ProductController {
 		dto.setFormats(productRepo.findAllFormat());
 		dto.setProduct(p);
 
-		int stock = accountRepo.findByProductId(p.getId()).size();
-		if (filters == null || filters.isEmpty()) {
-			dto.setStock(stock);
-		} else {
-			filterRepo.saveAll(filters);
-			dto.setFilters(filters);
-			if(filters.size()==2) {
-				stock = accountRepo.findByCountryAndSubscriptionTypeAndProductId(filters.get(0).getFilterValue(),
-						filters.get(1).getFilterValue(), p.getId()).size();
-				dto.setStock(stock);
-			} else if (filters.size() == 1) {
-				switch (filters.get(0).getDescription()) {
-				case "country":
-					stock = accountRepo.findByCountryAndProductId(filters.get(0).getFilterValue(), p.getId()).size();
-					dto.setStock(stock);
-					break;
-				case "subscription":
-					stock = accountRepo.findBySubscriptionTypeAndProductId(filters.get(0).getFilterValue(), p.getId())
-							.size();
-					dto.setStock(stock);
-					break;
-				default:
-					throw new BusinessException("The given filter is not correct.");
-				}
-			}else {
-				throw new BusinessException("Something went wrong with your order's filters.");
-			}
-//			if (filters.size() == filterRepo.findAll().size()) {
-//				stock = accountRepo.findByCountryAndSubscriptionTypeAndProductId(filters.get(0).getDescription(),
-//						filters.get(1).getDescription(), p.getId()).size();
-//				dto.setStock(stock);
-//			} else if (filters.size() == 1) {
-//				Filter f = filterRepo.findById(filters.get(0).getId())
-//						.orElseThrow(() -> new RuntimeException("filter not found"));
-//
-//				switch (f.getDescription()) {
-//				case "country":
-//					stock = accountRepo.findByCountryAndProductId(filters.get(0).getDescription(), p.getId()).size();
-//					dto.setStock(stock);
-//					break;
-//				case "subscription":
-//					stock = accountRepo.findBySubscriptionTypeAndProductId(filters.get(0).getDescription(), p.getId())
-//							.size();
-//					dto.setStock(stock);
-//					break;
-//				default:
-//					throw new Exception("The given filter is not correct.");
-//				}
-//
-//			} else
-//				throw new Exception("Something went wrong with your order's filters.");
-
-		}
-
+		int stock = accountController.isThereStock(filters, p.getId());
+		dto.setStock(stock);
 		return dto;
 	}
 
