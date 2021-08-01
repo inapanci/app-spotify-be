@@ -258,49 +258,53 @@ public class OrderController {
 		List<Filter> filters = o.getFilters();
 		List<Account> accounts = new ArrayList<>();
 		List<Account> subList = new ArrayList<>();
-		// apply quantity to accounts list dhe check sa her jan shit
-		if (filters != null && !filters.isEmpty()) {
-			if (filters.size() == 2) {
-				accounts = accountRepo.findByCountryAndSubscriptionTypeAndProductId(filters.get(0).getFilterValue(),
-						filters.get(1).getFilterValue(), o.getProduct().getId());
-			} else if (filters.size() == 1) {
+		if (o.getQuantity()!=0) {
+			// apply quantity to accounts list dhe check sa her jan shit
+			if (filters != null && !filters.isEmpty()) {
+				if (filters.size() == 2) {
+					accounts = accountRepo.findByCountryAndSubscriptionTypeAndProductId(filters.get(0).getFilterValue(),
+							filters.get(1).getFilterValue(), o.getProduct().getId());
+				} else if (filters.size() == 1) {
 
-				switch (filters.get(0).getDescription()) {
-				case "country":
-					accounts = accountRepo.findByCountryAndProductId(filters.get(0).getFilterValue(),
-							o.getProduct().getId());
-					break;
-				case "subscription":
-					accounts = accountRepo.findBySubscriptionTypeAndProductId(filters.get(0).getFilterValue(),
-							o.getProduct().getId());
-					break;
-				default:
-					throw new BusinessException("The given filter is not correct.");
-				}
+					switch (filters.get(0).getDescription()) {
+					case "country":
+						accounts = accountRepo.findByCountryAndProductId(filters.get(0).getFilterValue(),
+								o.getProduct().getId());
+						break;
+					case "subscription":
+						accounts = accountRepo.findBySubscriptionTypeAndProductId(filters.get(0).getFilterValue(),
+								o.getProduct().getId());
+						break;
+					default:
+						throw new BusinessException("The given filter is not correct.");
+					}
 
-			} else
-				throw new BusinessException("Something went wrong with your order's filters.");
-		} else {
-			accounts = accountRepo.getAllSpotifyFreeAccountsOfOrder(orderId, o.getQuantity());
-			while(accounts.size()<=o.getQuantity()) {
-				List<Account> extra = accountRepo.getAllAccountsOfOrder(orderId, o.getQuantity());
-				for(Account e : extra) {
-					accounts.add(e);
-				}
-			}
-		}
-
-		if (accounts.isEmpty()) {
-			throw new BusinessException("No accounts were found for your order.");
-		} else {
-			for (Account a : accounts) {
-				int soldToUser = accountRepo.findAccountSoldToUser(a.getId(), o.getUser().getId());
-				if (a.getSold() < 2 && soldToUser != 1 && subList.size() < o.getQuantity() && a.getSold() <= a.getProduct().getGate()) {
-					subList.add(a);
+				} else
+					throw new BusinessException("Something went wrong with your order's filters.");
+			} else {
+				accounts = accountRepo.getAllSpotifyFreeAccountsOfOrder(orderId, o.getQuantity());
+				while (accounts.size() <= o.getQuantity()) {
+					List<Account> extra = accountRepo.getAllAccountsOfOrder(orderId, o.getQuantity());
+					for (Account e : extra) {
+						accounts.add(e);
+					}
 				}
 			}
+			if (accounts.isEmpty()) {
+				throw new BusinessException("No accounts were found for your order.");
+			} else {
+				for (Account a : accounts) {
+					int soldToUser = accountRepo.findAccountSoldToUser(a.getId(), o.getUser().getId());
+					if (a.getSold() < 2 && soldToUser != 1 && subList.size() < o.getQuantity()
+							&& a.getSold() <= a.getProduct().getGate()) {
+						subList.add(a);
+					}
+				}
+			} 
 		}
-		
+		else {
+			throw new BusinessException("Error quantity.");
+		}
 		return subList;
 	}
 	

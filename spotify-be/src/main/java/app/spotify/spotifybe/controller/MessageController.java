@@ -106,7 +106,7 @@ public class MessageController {
 	}
 	
 	//admin+user
-	@PutMapping("message/setIsRead")
+	@GetMapping("message/setIsRead")
 	public void setIsRead(@RequestParam("ticketId") Integer ticketId) {
 		Ticket ticket = ticketRepo.findById(ticketId).orElseThrow(()-> new RuntimeException("Wrong ticket chosen."));
 		List<Message> messagesOfTicket = messageRepo.findByTicketId(ticketId);
